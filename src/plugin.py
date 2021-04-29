@@ -2,9 +2,9 @@
 '''
 Update rev
 $Author: michael $
-$Revision: 1590 $
-$Date: 2021-04-29 15:18:36 +0200 (Thu, 29 Apr 2021) $
-$Id: plugin.py 1590 2021-04-29 13:18:36Z michael $
+$Revision: 1591 $
+$Date: 2021-04-29 16:52:10 +0200 (Thu, 29 Apr 2021) $
+$Id: plugin.py 1591 2021-04-29 14:52:10Z michael $
 '''
 
 # C0111 (Missing docstring)
@@ -213,7 +213,10 @@ def initAvon():
 	avonFileName = resolveFilename(SCOPE_PLUGINS, "Extensions/FritzCall/avon.dat")
 	if os.path.exists(avonFileName):
 		for line in open(avonFileName):
-			line = six.ensure_text(line)
+			try:
+				line = six.ensure_text(line)
+			except UnicodeDecodeError:
+				line = six.ensure_text(line, "iso-8859-1")  # to deal with old avon.dat		
 			if line[0] == '#':
 				continue
 			parts = line.split(':')
@@ -347,8 +350,8 @@ class FritzAbout(Screen):
 		self["text"] = Label(
 							"FritzCall Plugin" + "\n\n" +
 							"$Author: michael $"[1:-2] + "\n" +
-							"$Revision: 1590 $"[1:-2] + "\n" +
-							"$Date: 2021-04-29 15:18:36 +0200 (Thu, 29 Apr 2021) $"[1:23] + "\n"
+							"$Revision: 1591 $"[1:-2] + "\n" +
+							"$Date: 2021-04-29 16:52:10 +0200 (Thu, 29 Apr 2021) $"[1:23] + "\n"
 							)
 		self["url"] = Label("http://wiki.blue-panel.com/index.php/FritzCall")
 		self.onLayoutFinish.append(self.setWindowTitle)
@@ -2119,7 +2122,7 @@ class FritzCallSetup(Screen, ConfigListScreen, HelpableScreen):
 
 	def setWindowTitle(self):
 		# TRANSLATORS: this is a window title.
-		self.setTitle(_("FritzCall Setup") + " (" + "$Revision: 1590 $"[1:-1] + "$Date: 2021-04-29 15:18:36 +0200 (Thu, 29 Apr 2021) $"[7:23] + ")")
+		self.setTitle(_("FritzCall Setup") + " (" + "$Revision: 1591 $"[1:-1] + "$Date: 2021-04-29 16:52:10 +0200 (Thu, 29 Apr 2021) $"[7:23] + ")")
 
 	def keyLeft(self):
 		ConfigListScreen.keyLeft(self)
@@ -2679,7 +2682,7 @@ class FritzReverseLookupAndNotifier(object):
 
 class FritzProtocol(LineReceiver):  # pylint: disable=W0223
 	def __init__(self):
-		info("[FritzProtocol] %s%s starting", "$Revision: 1590 $"[1:-1], "$Date: 2021-04-29 15:18:36 +0200 (Thu, 29 Apr 2021) $"[7:23])
+		info("[FritzProtocol] %s%s starting", "$Revision: 1591 $"[1:-1], "$Date: 2021-04-29 16:52:10 +0200 (Thu, 29 Apr 2021) $"[7:23])
 		global mutedOnConnID
 		mutedOnConnID = None
 		self.number = '0'
