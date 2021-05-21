@@ -2,9 +2,9 @@
 '''
 Created on 30.09.2012
 $Author: michael $
-$Revision: 1589 $
-$Date: 2021-04-25 11:48:00 +0200 (Sun, 25 Apr 2021) $
-$Id: FritzCallFBF.py 1589 2021-04-25 09:48:00Z michael $
+$Revision: 1594 $
+$Date: 2021-05-21 10:58:00 +0200 (Fri, 21 May 2021) $
+$Id: FritzCallFBF.py 1594 2021-05-21 08:58:00Z michael $
 '''
 
 # C0111 (Missing docstring)
@@ -3626,8 +3626,6 @@ class FritzCallFBF_upnp():
 
 		if "internet" in boxData and "led" in boxData["internet"] and boxData["internet"]["led"] == "globe_online":
 			upTime = _("Unknown")
-			if "txt" in boxData["internet"] and len(boxData["internet"]["txt"][0]) >= 1:
-				upTime = upTime + ' (' + boxData["internet"]["txt"][0].strip() + ')'
 
 		provider = None
 		if "internet" in boxData and "txt" in boxData["internet"]:
@@ -3746,6 +3744,8 @@ class FritzCallFBF_upnp():
 		if provider:
 			if upTime:
 				upTime = upTime + ' ' + _("with") + ' ' + provider
+			else:
+				upTime = provider
 
 		self.info("upTime final: " + repr(upTime))
 		self.info("provider final: " + repr(provider))
@@ -3839,26 +3839,26 @@ class FritzCallFBF_upnp():
 			guestAccess = ""
 			for fun in comfortFuncs:
 				if "linktxt" in fun:
-					if fun["linktxt"] == "Faxfunktion" and fun["details"] == "Integriertes Fax aktiv":
+					if fun["linktxt"] == "Faxfunktion" and six.ensure_str(fun["details"]) == "Integriertes Fax aktiv":
 						faxActive = True
-					elif fun["linktxt"] == "Fax function" and fun["details"] == "Integrated fax enabled":
+					elif fun["linktxt"] == "Fax function" and six.ensure_str(fun["details"]) == "Integrated fax enabled":
 						faxActive = True
 					elif fun["linktxt"] == "Rufumleitung" and fun["details"]:
 						if fun["details"] != "deaktiviert":
-							found = re.match(r'.*(?:(\d+) )?aktiv', fun["details"], re.S)
+							found = re.match(r'.*(?:(\d+) )?aktiv', six.ensure_str(fun["details"]), re.S)
 							if found and found.group(1):
 								rufumlActive = int(found.group(1))
 							else:
 								rufumlActive = -1  # means no number available
 					elif fun["linktxt"] == "Call diversion" and fun["details"]:
 						if fun["details"] != "disabled":
-							found = re.match(r'.*(?:(\d+) )?active', fun["details"], re.S)
+							found = re.match(r'.*(?:(\d+) )?active', six.ensure_str(fun["details"]), re.S)
 							if found and found.group(1):
 								rufumlActive = int(found.group(1))
 							else:
 								rufumlActive = -1  # means no number available
 					elif fun["linktxt"] == "WLAN-Gastzugang" and fun["details"]:
-						found = re.match(r'.*aktiv \([^\)]+\)(?:, (ungesichert|gesichert))?,(?: (\d+) (Minuten|Stunden) verbleiben,)? (\d+ Gerät(?:e)?), (.+)', fun["details"], re.S)
+						found = re.match(r'.*aktiv \([^\)]+\)(?:, (ungesichert|gesichert))?,(?: (\d+) (Minuten|Stunden) verbleiben,)? (\d+ Gerät(?:e)?), (.+)', six.ensure_str(fun["details"]), re.S)
 						if found:
 							if found.group(1):
 								if found.group().find('ungesichert') != -1:
@@ -3877,7 +3877,7 @@ class FritzCallFBF_upnp():
 							if found.group(5):
 								guestAccess = guestAccess + ', ' + found.group(5)  # WLAN Name
 					elif fun["linktxt"] == "Wireless guest access" and fun["details"]:
-						found = re.match(r'.*enabled \([^\)]+\)(?:, (secured|unsecured))?,(?: (\d+) (minutes|hours) left,)? (\d+ devices), (.+)', fun["details"], re.S)
+						found = re.match(r'.*enabled \([^\)]+\)(?:, (secured|unsecured))?,(?: (\d+) (minutes|hours) left,)? (\d+ devices), (.+)', six.ensure_str(fun["details"]), re.S)
 						if found:
 							if found.group(1):
 								if found.group().find('secured') != -1:

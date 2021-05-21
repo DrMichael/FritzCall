@@ -2,9 +2,9 @@
 '''
 Update rev
 $Author: michael $
-$Revision: 1591 $
-$Date: 2021-04-29 16:52:10 +0200 (Thu, 29 Apr 2021) $
-$Id: plugin.py 1591 2021-04-29 14:52:10Z michael $
+$Revision: 1594 $
+$Date: 2021-05-21 10:58:00 +0200 (Fri, 21 May 2021) $
+$Id: plugin.py 1594 2021-05-21 08:58:00Z michael $
 '''
 
 # C0111 (Missing docstring)
@@ -350,8 +350,8 @@ class FritzAbout(Screen):
 		self["text"] = Label(
 							"FritzCall Plugin" + "\n\n" +
 							"$Author: michael $"[1:-2] + "\n" +
-							"$Revision: 1591 $"[1:-2] + "\n" +
-							"$Date: 2021-04-29 16:52:10 +0200 (Thu, 29 Apr 2021) $"[1:23] + "\n"
+							"$Revision: 1594 $"[1:-2] + "\n" +
+							"$Date: 2021-05-21 10:58:00 +0200 (Fri, 21 May 2021) $"[1:23] + "\n"
 							)
 		self["url"] = Label("http://wiki.blue-panel.com/index.php/FritzCall")
 		self.onLayoutFinish.append(self.setWindowTitle)
@@ -991,6 +991,7 @@ class FritzMenu(Screen, HelpableScreen):
 				self["gast_inactive"].show()
 				self["FBFGast"].setText(_('Guest access not active'))
 
+			guestAccess = six.ensure_str(guestAccess)
 			if guestAccess and (guestAccess.find('WLAN') != -1 or guestAccess.find('WIFI') != -1):
 				# TRANSLATORS: keep it short, this is a button
 				self["key_yellow"].setText(_("Deactivate WLAN guest access"))
@@ -2122,7 +2123,7 @@ class FritzCallSetup(Screen, ConfigListScreen, HelpableScreen):
 
 	def setWindowTitle(self):
 		# TRANSLATORS: this is a window title.
-		self.setTitle(_("FritzCall Setup") + " (" + "$Revision: 1591 $"[1:-1] + "$Date: 2021-04-29 16:52:10 +0200 (Thu, 29 Apr 2021) $"[7:23] + ")")
+		self.setTitle(_("FritzCall Setup") + " (" + "$Revision: 1594 $"[1:-1] + "$Date: 2021-05-21 10:58:00 +0200 (Fri, 21 May 2021) $"[7:23] + ")")
 
 	def keyLeft(self):
 		ConfigListScreen.keyLeft(self)
@@ -2682,7 +2683,7 @@ class FritzReverseLookupAndNotifier(object):
 
 class FritzProtocol(LineReceiver):  # pylint: disable=W0223
 	def __init__(self):
-		info("[FritzProtocol] %s%s starting", "$Revision: 1591 $"[1:-1], "$Date: 2021-04-29 16:52:10 +0200 (Thu, 29 Apr 2021) $"[7:23])
+		info("[FritzProtocol] %s%s starting", "$Revision: 1594 $"[1:-1], "$Date: 2021-05-21 10:58:00 +0200 (Fri, 21 May 2021) $"[7:23])
 		global mutedOnConnID
 		mutedOnConnID = None
 		self.number = '0'
