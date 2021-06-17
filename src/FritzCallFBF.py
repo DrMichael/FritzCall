@@ -2,9 +2,9 @@
 '''
 Created on 30.09.2012
 $Author: michael $
-$Revision: 1594 $
-$Date: 2021-05-21 10:58:00 +0200 (Fri, 21 May 2021) $
-$Id: FritzCallFBF.py 1594 2021-05-21 08:58:00Z michael $
+$Revision: 1597 $
+$Date: 2021-06-17 10:12:50 +0200 (Thu, 17 Jun 2021) $
+$Id: FritzCallFBF.py 1597 2021-06-17 08:12:50Z michael $
 '''
 
 # C0111 (Missing docstring)
@@ -4220,9 +4220,30 @@ class FritzCallFBF_upnp():
 		if "X_AVM-DE_OnTel:1" not in list(self.fc.services.keys()):
 			Notifications.AddNotification(MessageBox, _("Cannot get infos from FRITZ!Box yet\nStill initialising or wrong firmware version"), type = MessageBox.TYPE_ERROR, timeout = config.plugins.FritzCall.timeout.value)
 			return
-		self.fc.call_action(self._readBlacklist_cb, "X_AVM-DE_OnTel", "GetDeflections")
-		
-	def _readBlacklist_cb(self, result):
+		self.fc.call_action(self._readBlacklist_cb1, "X_AVM-DE_OnTel", "GetCallBarringList")
+
+	def _readBlacklist_cb1(self, result):
+		self.debug(repr(result))
+		if isinstance(result, Failure):
+			text = _("FRITZ!Box - ") + _("Could not load barring list: ") + _("wrong user or password?")
+			self._notify(text)
+			self._loginFailure = True
+			return
+
+		if self.logger.getEffectiveLevel() == logging.DEBUG:
+			self.debug("dumping result to /tmp/FritzCall_readBlacklist_cb1.xml")
+			linkP = open("/tmp/FritzCall_readBlacklist_cb1.xml", "w")
+			linkP.write(repr(result))
+			linkP.close()
+
+		if 'NewPhonebookURL' not in result:
+			text = _("FRITZ!Box - ") + _("Could not load barring list: %s") % 'NewPhonebookName'
+			self._notify(text)
+			return
+
+		getPage(six.ensure_binary(result["NewPhonebookURL"])).addCallback(self._readBlacklist_cb2)
+
+	def _readBlacklist_cb2(self, result):
 		def _readPhonebookForBlacklist(result):
 			self.debug(repr(result))
 			if isinstance(result, Failure):
@@ -4277,14 +4298,85 @@ class FritzCallFBF_upnp():
 			return
 
 		if self.logger.getEffectiveLevel() == logging.DEBUG:
-			self.debug("dumping result to /tmp/FritzCall_readBlacklist_cb.xml")
-			linkP = open("/tmp/FritzCall_readBlacklist_cb.xml", "w")
-			linkP.write(result["NewDeflectionList"])
+			self.debug("dumping result to /tmp/FritzCall_readBlacklist_cb2.xml")
+			linkP = open("/tmp/FritzCall_readBlacklist_cb2.xml", "w")
+			linkP.write(repr(result))
+			linkP.close()
+
+		for deflection in ET.fromstring(result).iterfind(".//contact"):
+			# self.debug("realName: " + deflection.find("./person/realName").text)
+			numbers = deflection.iterfind("./telephony/number")
+			for number in numbers:
+				# self.debug("number: " + number.text)
+				self.blacklist[0].append(number.text)
+
+		# self.debug(repr(self.blacklist))
+
+		self.fc.call_action(self._readBlacklist_cb3, "X_AVM-DE_OnTel", "GetDeflections")
+
+	def _readBlacklist_cb3(self, result):
+		def _readPhonebookForBlacklist(result):
+			self.debug(repr(result))
+			if isinstance(result, Failure):
+				text = _("FRITZ!Box - ") + _("Could not load phonebook: ") + _("wrong user or password?")
+				self._notify(text)
+				self._loginFailure = True
+				return
+	
+			if 'NewPhonebookName' not in result or 'NewPhonebookURL' not in result:
+				text = _("FRITZ!Box - ") + _("Could not load phonebook: %s") % 'NewPhonebookName'
+				self._notify(text)
+				return
+	
+			getPage(six.ensure_binary(result["NewPhonebookURL"])).addCallback(_readPhonebookForBlacklist_cb)
+	
+		def _readPhonebookForBlacklist_cb(result):
+			result = six.ensure_text(result)
+			root = ET.fromstring(result)
+			thisName = root.find(".//phonebook").attrib["name"]
+			self.debug("Phonebook: %s", thisName)
+			if self.logger.getEffectiveLevel() == logging.DEBUG:
+				self.debug("dumping phonebook to /tmp/FritzCall_readPhonebookForBlacklist_cb_%s.xml", thisName)
+				linkP = open("/tmp/FritzCall_readPhonebookForBlacklist_cb_%s.xml" % thisName, "w")
+				linkP.write(result)
+				linkP.close()
+	
+			contacts = root.iterfind(".//contact")
+			for contact in contacts:
+				numbers = contact.iterfind("./telephony/number")
+				for number in numbers:
+					# self.debug("Number: " + number.text + " " + number.attrib["type"])
+					thisType = number.attrib["type"]
+					if thisType.startswith('label:'):
+						thisType = thisType[6:]
+					if (thisType == "intern" or thisType == "memo" or thisType == ""):
+						# self.info("Skipping internal number %s", (__(number)))
+						continue
+					thisnumber = cleanNumber(number.text)
+					if thisnumber in self.blacklist[0]:
+						# self.info("Number already exists, skipping '''%s'''", (__(thisnumber)))
+						continue
+					else:
+						# self.debug("Number: " + thisnumber + " added to blacklist.")
+						self.blacklist[0].append(thisnumber)
+			self.debug("After phonebook imput: %s", repr(self.blacklist))
+
+		# self.debug(repr(result))
+		if isinstance(result, Failure):
+			text = _("FRITZ!Box - ") + _("Could not load deflections list: ") + _("wrong user or password?")
+			self._notify(text)
+			self._loginFailure = True
+			return
+
+		if self.logger.getEffectiveLevel() == logging.DEBUG:
+			self.debug("dumping result to /tmp/FritzCall_readBlacklist_cb3.xml")
+			linkP = open("/tmp/FritzCall_readBlacklist_cb3.xml", "w")
+			linkP.write(repr(result))
 			linkP.close()
 
 		for deflection in ET.fromstring(result["NewDeflectionList"]).iterfind(".//Item"):
-			# self.debug("enable: " + deflection.find("./Enable").text)
-			if deflection.find("./Enable").text == '1':
+			self.debug("enable: " + deflection.find("./Mode").text)
+			if deflection.find("./Enable").text == '1' and deflection.find("./Mode").text in ['eNoSignal', 'eImmediately']:
 				if deflection.find("./Type").text == "fromNumber":
 					self.blacklist[0].append(deflection.find("./Number").text)
 				if deflection.find("./Type").text == "fromAnonymous":
@@ -4300,8 +4392,7 @@ class FritzCallFBF_upnp():
 					else:
 						Notifications.AddNotification(MessageBox, _("Cannot get infos from FRITZ!Box yet\nStill initialising or wrong firmware version"), type = MessageBox.TYPE_ERROR, timeout = config.plugins.FritzCall.timeout.value)
 
-
-		self.debug(repr(self.blacklist))
+		self.debug("blacklist: %s", repr(self.blacklist))
 
 	def dial(self, number):  # @UnusedVariable # pylint: disable=W0613
 		'''
