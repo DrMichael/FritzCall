@@ -2,9 +2,9 @@
 '''
 Created on 30.09.2012
 $Author: michael $
-$Revision: 1597 $
-$Date: 2021-06-17 10:12:50 +0200 (Thu, 17 Jun 2021) $
-$Id: FritzCallFBF.py 1597 2021-06-17 08:12:50Z michael $
+$Revision: 1599 $
+$Date: 2021-08-20 15:43:14 +0200 (Fri, 20 Aug 2021) $
+$Id: FritzCallFBF.py 1599 2021-08-20 13:43:14Z michael $
 '''
 
 # C0111 (Missing docstring)
@@ -32,16 +32,16 @@ from six.moves import map, range
 from Tools import Notifications
 from Screens.MessageBox import MessageBox
 from twisted.web.client import getPage
-from enigma import eTimer  #@UnresolvedImport
+from enigma import eTimer  # @UnresolvedImport
 
 from . import __  # @UnresolvedImport # pylint: disable=W0611,F0401
 try:
 	from enigma import eMediaDatabase  # @UnresolvedImport @UnusedImport
 except:
 	from . import _  # @UnresolvedImport
-from .plugin import config, stripCbCPrefix, resolveNumberWithAvon, FBF_IN_CALLS, FBF_OUT_CALLS, FBF_MISSED_CALLS, FBF_BLOCKED_CALLS, decode  #@UnresolvedImport
-from .nrzuname import html2unicode  #@UnresolvedImport
-from .FritzConnection import FritzConnection  #@UnresolvedImport
+from .plugin import config, stripCbCPrefix, resolveNumberWithAvon, FBF_IN_CALLS, FBF_OUT_CALLS, FBF_MISSED_CALLS, FBF_BLOCKED_CALLS, decode  # @UnresolvedImport
+from .nrzuname import html2unicode  # @UnresolvedImport
+from .FritzConnection import FritzConnection  # @UnresolvedImport
 
 FBF_boxInfo = 0
 FBF_upTime = 1
@@ -3475,7 +3475,8 @@ class FritzCallFBF_06_35(object):
 		self._notify(text)
 		self._logout(md5Sid, "_errorBlacklist")
 
-TIMEOUT=20
+
+TIMEOUT = 20
 
 class FritzCallFBF_upnp():
 	logger = logging.getLogger("FritzCall.FBF_upnp")
@@ -3552,7 +3553,7 @@ class FritzCallFBF_upnp():
 	def _getInfo(self, result):
 		self.debug(repr(result))
 		if isinstance(result, Failure):
-			text = _("FRITZ!Box - Error getting status: ")  + _("wrong user or password?")
+			text = _("FRITZ!Box - Error getting status: ") + _("wrong user or password?")
 			self._loginFailure = True
 			self._notify(text)
 			return
@@ -3562,7 +3563,7 @@ class FritzCallFBF_upnp():
 			return
 
 		md5Sid = result["NewX_AVM-DE_UrlSID"]
-		md5Sid = md5Sid[md5Sid.find("sid=")+4:]
+		md5Sid = md5Sid[md5Sid.find("sid=") + 4:]
 		self.debug("md5sid: " + md5Sid)
 
 		self._readBlacklist()
@@ -3574,7 +3575,7 @@ class FritzCallFBF_upnp():
 			'type':'all'
 			})
 		self.debug("url: " + url + "?" + parms)
-		
+
 		headers = {
 			'Content-Type': "application/x-www-form-urlencoded",
 			'Content-Length': str(len(parms))}
@@ -3663,7 +3664,7 @@ class FritzCallFBF_upnp():
 		self.info("upTime: " + repr(upTime))
 		self.info("provider: " + repr(provider))
 		self.info("ipAddress: " + repr(ipAddress))
-		
+
 		if "ipv4" in boxData and "txt" in boxData["ipv4"]:
 			for item in boxData["ipv4"]["txt"]:
 				found = re.match(r'.*verbunden seit (.*)', item, re.S)
@@ -3792,7 +3793,7 @@ class FritzCallFBF_upnp():
 
 		if wlan5:
 			# self.info("wlanState5/1: " + repr(wlanState))
-			netName =  six.ensure_str(re.sub(r".*: ", "", wlan5["txt"]))
+			netName = six.ensure_str(re.sub(r".*: ", "", wlan5["txt"]))
 			# self.info("wlanState5/2: " + repr(netName))
 			if not wlanState:
 				if wlan5["led"] == "led_green":
@@ -3812,7 +3813,7 @@ class FritzCallFBF_upnp():
 		if not wlanState and "wlan" in boxData:
 			wlan = boxData["wlan"]
 			# self.debug("wlan: " + repr(wlan))
-			netName =  six.ensure_str(re.sub(r".*: ", "", wlan["txt"]))
+			netName = six.ensure_str(re.sub(r".*: ", "", wlan["txt"]))
 			# self.debug("netName: %s; led: %s", repr(netName), repr(wlan["led"]))
 			if wlan["led"] == "led_green":
 				wlanState = ['1', '', '', "2,4GHz/5GHz " + _("on") + ": " + netName]
@@ -3826,11 +3827,11 @@ class FritzCallFBF_upnp():
 			if dect and dect["led"] == "led_green":
 				found = re.match(r'an, ([\d+]+|ein) Schnurlostelefon(?:e)? angemeldet', dect["txt"], re.S)
 				if found:
-					dectActive =  six.ensure_str(found.group(1))
+					dectActive = six.ensure_str(found.group(1))
 				else:
 					found = re.match(r'enabled, ([\d+]+|one) cordless telephone(?:s)? registered', dect["txt"], re.S)
 					if found:
-						dectActive =  six.ensure_str(found.group(1))
+						dectActive = six.ensure_str(found.group(1))
 		self.info("dectActive: " + repr(dectActive))
 
 		self.debug("comfort")
@@ -3928,7 +3929,7 @@ class FritzCallFBF_upnp():
 		self.debug("")
 
 		if isinstance(result, Failure):
-			text = _("FRITZ!Box - Could not load calls: %s")  % _("wrong user or password?")
+			text = _("FRITZ!Box - Could not load calls: %s") % _("wrong user or password?")
 			self._loginFailure = True
 			self._notify(text)
 			return
@@ -4121,7 +4122,7 @@ class FritzCallFBF_upnp():
 					self.info("Ignoring entry with empty number for '''%s'''", (__(thisname)))
 					continue
 				else:
-					dummy = _("fax_work") + _("fax_home") + _("pager") # this is just to trigger localisation; WTF?!?!
+					dummy = _("fax_work") + _("fax_home") + _("pager")  # this is just to trigger localisation; WTF?!?!
 					thisType = number.attrib["type"]
 					# self.debug("thisType: %s",  thisType)
 					if thisType.startswith('label:'):
@@ -4197,7 +4198,7 @@ class FritzCallFBF_upnp():
 	def _general_cb(self, result, callback):
 		self.debug("result: " + repr(result))
 		if isinstance(result, Failure):
-			text = _("FRITZ!Box - Error logging in: %s")  % _("wrong user or password?")
+			text = _("FRITZ!Box - Error logging in: %s") % _("wrong user or password?")
 			self._loginFailure = True
 			self._notify(text)
 			return
@@ -4206,7 +4207,7 @@ class FritzCallFBF_upnp():
 	def _general_cb1(self, result):
 		self.debug("result: " + repr(result))
 		if isinstance(result, Failure):
-			text = _("FRITZ!Box - Error logging in: %s")  % _("wrong user or password?")
+			text = _("FRITZ!Box - Error logging in: %s") % _("wrong user or password?")
 			self._loginFailure = True
 			self._notify(text)
 			return
@@ -4251,14 +4252,14 @@ class FritzCallFBF_upnp():
 				self._notify(text)
 				self._loginFailure = True
 				return
-	
+
 			if 'NewPhonebookName' not in result or 'NewPhonebookURL' not in result:
 				text = _("FRITZ!Box - ") + _("Could not load phonebook: %s") % 'NewPhonebookName'
 				self._notify(text)
 				return
-	
+
 			getPage(six.ensure_binary(result["NewPhonebookURL"])).addCallback(_readPhonebookForBlacklist_cb)
-	
+
 		def _readPhonebookForBlacklist_cb(result):
 			result = six.ensure_text(result)
 			root = ET.fromstring(result)
@@ -4269,7 +4270,7 @@ class FritzCallFBF_upnp():
 				linkP = open("/tmp/FritzCall_readPhonebookForBlacklist_cb_%s.xml" % thisName, "w")
 				linkP.write(result)
 				linkP.close()
-	
+
 			contacts = root.iterfind(".//contact")
 			for contact in contacts:
 				numbers = contact.iterfind("./telephony/number")
@@ -4292,7 +4293,7 @@ class FritzCallFBF_upnp():
 
 		self.debug("")
 		if isinstance(result, Failure):
-			text = _("FRITZ!Box - Error getting blacklist: %s")  % _("wrong user or password?")
+			text = _("FRITZ!Box - Error getting blacklist: %s") % _("wrong user or password?")
 			self._loginFailure = True
 			self._notify(text)
 			return
@@ -4322,14 +4323,14 @@ class FritzCallFBF_upnp():
 				self._notify(text)
 				self._loginFailure = True
 				return
-	
+
 			if 'NewPhonebookName' not in result or 'NewPhonebookURL' not in result:
 				text = _("FRITZ!Box - ") + _("Could not load phonebook: %s") % 'NewPhonebookName'
 				self._notify(text)
 				return
-	
+
 			getPage(six.ensure_binary(result["NewPhonebookURL"])).addCallback(_readPhonebookForBlacklist_cb)
-	
+
 		def _readPhonebookForBlacklist_cb(result):
 			result = six.ensure_text(result)
 			root = ET.fromstring(result)
@@ -4340,7 +4341,7 @@ class FritzCallFBF_upnp():
 				linkP = open("/tmp/FritzCall_readPhonebookForBlacklist_cb_%s.xml" % thisName, "w")
 				linkP.write(result)
 				linkP.close()
-	
+
 			contacts = root.iterfind(".//contact")
 			for contact in contacts:
 				numbers = contact.iterfind("./telephony/number")
