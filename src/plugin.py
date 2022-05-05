@@ -2,11 +2,10 @@
 '''
 Update rev
 $Author: michael $
-$Revision: 1599 $
-$Date: 2021-08-20 15:43:14 +0200 (Fri, 20 Aug 2021) $
-$Id: plugin.py 1599 2021-08-20 13:43:14Z michael $
+$Revision: 1605 $
+$Date: 2022-05-04 12:00:19 +0200 (Wed, 04 May 2022) $
+$Id: plugin.py 1605 2022-05-04 10:00:19Z michael $
 '''
-
 
 # C0111 (Missing docstring)
 # C0103 (Invalid name)
@@ -74,10 +73,16 @@ if six.PY3:
 	import codecs
 
 	def encode(x):
-		codecs.encode(x, "rot13")
+		if x is not None:
+			return codecs.encode(x, "rot13")
+		else:
+			return ""
 
 	def decode(x):
-		codecs.decode(x, "rot13")
+		if x is not None:
+			return codecs.decode(x, "rot13")
+		else:
+			return ""
 else:
 	def encode(x):
 		return base64.b64encode(''.join(chr(ord(c) ^ ord(k)) for c, k in zip(x, cycle('secret key')))).strip()
@@ -359,8 +364,8 @@ class FritzAbout(Screen):
 		self["text"] = Label(
 							"FritzCall Plugin" + "\n\n" +
 							"$Author: michael $"[1:-2] + "\n" +
-							"$Revision: 1599 $"[1:-2] + "\n" +
-							"$Date: 2021-08-20 15:43:14 +0200 (Fri, 20 Aug 2021) $"[1:23] + "\n"
+							"$Revision: 1605 $"[1:-2] + "\n" +
+							"$Date: 2022-05-04 12:00:19 +0200 (Wed, 04 May 2022) $"[1:23] + "\n"
 							)
 		self["url"] = Label("http://wiki.blue-panel.com/index.php/FritzCall")
 		self.onLayoutFinish.append(self.setWindowTitle)
@@ -873,7 +878,7 @@ class FritzMenu(Screen, HelpableScreen):
 
 			if ipAddress:
 				if upTime:
-					self["FBFInternet"].setText('Internet ' + _('IP Address:') + ' ' + ipAddress + '\n' + _('Connected since') + ' ' + six.ensure_str(upTime))
+					self["FBFInternet"].setText('Internet ' + _('IP Address:') + ' ' + six.ensure_str(ipAddress) + '\n' + _('Connected since') + ' ' + six.ensure_str(upTime))
 				else:
 					self["FBFInternet"].setText('Internet ' + _('IP Address:') + ' ' + ipAddress)
 				self["internet_inactive"].hide()
@@ -2135,7 +2140,7 @@ class FritzCallSetup(Screen, ConfigListScreen, HelpableScreen):
 
 	def setWindowTitle(self):
 		# TRANSLATORS: this is a window title.
-		self.setTitle(_("FritzCall Setup") + " (" + "$Revision: 1599 $"[1:-1] + "$Date: 2021-08-20 15:43:14 +0200 (Fri, 20 Aug 2021) $"[7:23] + ")")
+		self.setTitle(_("FritzCall Setup") + " (" + "$Revision: 1605 $"[1:-1] + "$Date: 2022-05-04 12:00:19 +0200 (Wed, 04 May 2022) $"[7:23] + ")")
 
 	def keyLeft(self):
 		ConfigListScreen.keyLeft(self)
@@ -2699,7 +2704,7 @@ class FritzReverseLookupAndNotifier(object):
 
 class FritzProtocol(LineReceiver):  # pylint: disable=W0223
 	def __init__(self):
-		info("[FritzProtocol] %s%s starting", "$Revision: 1599 $"[1:-1], "$Date: 2021-08-20 15:43:14 +0200 (Fri, 20 Aug 2021) $"[7:23])
+		info("[FritzProtocol] %s%s starting", "$Revision: 1605 $"[1:-1], "$Date: 2022-05-04 12:00:19 +0200 (Wed, 04 May 2022) $"[7:23])
 		global mutedOnConnID
 		mutedOnConnID = None
 		self.number = '0'
