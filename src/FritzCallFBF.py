@@ -2,9 +2,9 @@
 '''
 Created on 30.09.2012
 $Author: michael $
-$Revision: 1603 $
-$Date: 2022-05-03 15:50:38 +0200 (Tue, 03 May 2022) $
-$Id: FritzCallFBF.py 1603 2022-05-03 13:50:38Z michael $
+$Revision: 1623 $
+$Date: 2022-05-08 12:28:43 +0200 (Sun, 08 May 2022) $
+$Id: FritzCallFBF.py 1623 2022-05-08 10:28:43Z michael $
 '''
 
 # C0111 (Missing docstring)
@@ -3628,45 +3628,96 @@ class FritzCallFBF_upnp():
 		boxInfo = six.ensure_str(boxInfo)
 		self.info("Boxinfo2: " + repr(boxInfo))
 
-		if "internet" in boxData and "led" in boxData["internet"] and boxData["internet"]["led"] == "globe_online":
-			upTime = _("Unknown")
+		internetSpeed = ""
+		provider = ""
+		upTime = ""
+		ipAddress = ""
+		provider6 = ""
+		upTime6 = ""
+		ipAddress6 = ""
 
-		provider = None
-		if "internet" in boxData and "txt" in boxData["internet"]:
-			for item in boxData["internet"]["txt"]:
-				item = six.ensure_str(item)
-				found = re.match(r'.*verbunden (?:als WLAN-Repeater |über WAN )?seit (.*)', item, re.S)
-				if found:
-					upTime = found.group(1)
-				else:
-					found = re.match(r'.*connected (?:as WIFI repeater )?since (.*)', item, re.S)
+		if "internet" in boxData:
+			if "led" in boxData["internet"] and boxData["internet"]["led"] == "globe_online":
+				upTime = _("Unknown")
+
+			if "down" in boxData["internet"] and "up" in boxData["internet"]:
+				connData = boxData["internet"]
+				internetSpeed = connData["down"] + " Mbit/s / " + " / " + connData["up"] + " Mbit/s / "
+				internetSpeed = internetSpeed.replace('\\', '')
+			else:
+				internetSpeed = ""
+
+			if "txt" in boxData["internet"]:
+				for item in boxData["internet"]["txt"]:
+					item = six.ensure_str(item)
+					found = re.match(r'.*verbunden (?:als WLAN-Repeater |über WAN )?seit (.*)', item, re.S)
 					if found:
 						upTime = found.group(1)
-				found = re.match(r'\s*Anbieter: (.*)', item, re.S)
-				if found:
-					provider = found.group(1)
-				else:
-					found = re.match(r'\s*Provider: (.*)', item, re.S)
+					else:
+						found = re.match(r'.*connected (?:as WIFI repeater )?since (.*)', item, re.S)
+						if found:
+							upTime = found.group(1)
+					found = re.match(r'\s*Anbieter: (.*)', item, re.S)
 					if found:
 						provider = found.group(1)
-				found = re.match(r'IP(?:v4)?-Adresse: (.*)', item, re.S)
-				if found:
-					ipAddress = found.group(1)
-				else:
-					found = re.match(r'IP(?:v4)? address: (.*)', item, re.S)
+					else:
+						found = re.match(r'\s*Provider: (.*)', item, re.S)
+						if found:
+							provider = found.group(1)
+					found = re.match(r'IP(?:v4)?-Adresse: (.*)', item, re.S)
 					if found:
 						ipAddress = found.group(1)
+					else:
+						found = re.match(r'IP(?:v4)? address: (.*)', item, re.S)
+						if found:
+							ipAddress = found.group(1)
 
-		if "internet" in boxData and "down" in boxData["internet"] and "up" in boxData["internet"]:
-			connData = boxData["internet"]
-			internetSpeed = connData["down"] + " Mbit/s / " + " / " + connData["up"] + " Mbit/s / "
-			internetSpeed = internetSpeed.replace('\\', '')
-		else:
-			internetSpeed = None
+			self.info("from txt")
+			self.info("upTime: " + repr(upTime))
+			self.info("provider: " + repr(provider))
+			self.info("ipAddress: " + repr(ipAddress))
+
+			self.debug("1")
+			if "connections" in boxData["internet"]:  # since 07.39
+				for connData in boxData["internet"]["connections"]:
+					self.debug("2")
+					if provider:
+						provider = provider + ", " + connData["provider"]
+					else:
+						provider = connData["provider"]
+					self.debug("3")
+					if "downstream" in connData and "upstream" in connData:
+						if internetSpeed:
+							internetSpeed = internetSpeed + ", " + str(connData["downstream"] / 1000) + " Mb/s / " + str(connData["upstream"] / 1000) + " Mb/s"
+						else:
+							internetSpeed = str(connData["downstream"] / 1000) + " Mb/s / " + str(connData["upstream"] / 1000) + " Mb/s"
+					self.debug("4")
+					if connData["ipv4"]["connected"]:
+						if upTime:
+							upTime = upTime + ", " + datetime.fromtimestamp(connData["ipv4"]["since"]).strftime('%d.%m.%Y, %H:%M')
+						else:
+							upTime = datetime.fromtimestamp(connData["ipv4"]["since"]).strftime('%d.%m.%Y, %H:%M')
+						if ipAddress:
+							ipAddress = ipAddress + ", " + connData["ipv4"]["ip"]
+						else:
+							ipAddress = connData["ipv4"]["ip"]
+					self.debug("5")
+					if connData["ipv6"]["connected"]:
+						if upTime6:
+							upTime6 = upTime6 + ", " + datetime.fromtimestamp(connData["ipv6"]["since"]).strftime('%d.%m.%Y, %H:%M')
+						else:
+							upTime6 = datetime.fromtimestamp(connData["ipv6"]["since"]).strftime('%d.%m.%Y, %H:%M')
+						if ipAddress6:
+							ipAddress6 = ipAddress6 + ", " + connData["ipv6"]["ip"]
+						else:
+							ipAddress6 = connData["ipv6"]["ip"]
 
 		self.info("upTime: " + repr(upTime))
 		self.info("provider: " + repr(provider))
 		self.info("ipAddress: " + repr(ipAddress))
+		self.info("upTime6: " + repr(upTime6))
+		self.info("provider6: " + repr(provider6))
+		self.info("ipAddress6: " + repr(ipAddress6))
 
 		if "ipv4" in boxData and "txt" in boxData["ipv4"]:
 			for item in boxData["ipv4"]["txt"]:
@@ -3692,47 +3743,7 @@ class FritzCallFBF_upnp():
 					if found:
 						ipAddress = found.group(1)
 
-		self.debug("1")
-		if "internet" in boxData and "connections" in boxData["internet"]:  # since 07.39
-			provider = ""
-			internetSpeed = ""
-			upTime = ""
-			ipAddress = ""
-			upTime6 = ""
-			ipAddress6 = ""
-			for connData in boxData["internet"]["connections"]:
-				self.debug("2")
-				if provider:
-					provider = provider + ", " + connData["provider"]
-				else:
-					provider = connData["provider"]
-				self.debug("3")
-				if "downstream" in connData and "upstream" in connData:
-					if internetSpeed:
-						internetSpeed = internetSpeed + ", " + str(connData["downstream"] / 1000) + " Mb/s / " + str(connData["upstream"] / 1000) + " Mb/s"
-					else:
-						internetSpeed = str(connData["downstream"] / 1000) + " Mb/s / " + str(connData["upstream"] / 1000) + " Mb/s"
-				self.debug("4")
-				if connData["ipv4"]["connected"]:
-					if upTime:
-						upTime = upTime + ", " + datetime.fromtimestamp(connData["ipv4"]["since"]).strftime('%d.%m.%Y, %H:%M')
-					else:
-						upTime = datetime.fromtimestamp(connData["ipv4"]["since"]).strftime('%d.%m.%Y, %H:%M')
-					if ipAddress:
-						ipAddress = ipAddress + ", " + connData["ipv4"]["ip"]
-					else:
-						ipAddress = connData["ipv4"]["ip"]
-				self.debug("5")
-				if connData["ipv6"]["connected"]:
-					if upTime6:
-						upTime6 = upTime6 + ", " + datetime.fromtimestamp(connData["ipv6"]["since"]).strftime('%d.%m.%Y, %H:%M')
-					else:
-						upTime6 = datetime.fromtimestamp(connData["ipv6"]["since"]).strftime('%d.%m.%Y, %H:%M')
-					if ipAddress6:
-						ipAddress6 = ipAddress6 + ", " + connData["ipv6"]["ip"]
-					else:
-						ipAddress6 = connData["ipv6"]["ip"]
-
+		self.info("after ipv4/txt")
 		self.info("upTime: " + repr(upTime))
 		self.info("provider: " + repr(provider))
 		self.info("ipAddress: " + repr(ipAddress))
@@ -3764,6 +3775,7 @@ class FritzCallFBF_upnp():
 					if found:
 						ipAddress6 = found.group(1)
 
+		self.info("after ipv6/txt")
 		self.info("upTime6: " + repr(upTime6))
 		self.info("provider6: " + repr(provider6))
 		self.info("ipAddress6: " + repr(ipAddress6))
@@ -3815,7 +3827,7 @@ class FritzCallFBF_upnp():
 				# dslState[1] = "{:.}".format(connData["down"]) + " / " + "{:.}".format(connData["up"])
 				dslState[1] = str(connData["down"] / 1000) + " Mb/s / " + str(connData["up"] / 1000) + " Mb/s"
 				dslState[2] = connData["title"]
-				if internetSpeed:
+				if internetSpeed and internetSpeed != dslState[1]:
 					dslState[1] = dslState[1] + "; Internet: " + internetSpeed
 			else:
 				dslState = ['1', None, None]  # 1 is dummy
@@ -3899,9 +3911,9 @@ class FritzCallFBF_upnp():
 		self.info("dectActive: " + repr(dectActive))
 
 		self.debug("comfort")
+		guestAccess = ""
 		if "comfort" in boxData and "func" in boxData["comfort"]:
 			comfortFuncs = boxData["comfort"]["func"]
-			guestAccess = ""
 			for fun in comfortFuncs:
 				if "linktxt" in fun:
 					if fun["linktxt"] == "Faxfunktion" and six.ensure_str(fun["details"]) == "Integriertes Fax aktiv":
@@ -3967,11 +3979,8 @@ class FritzCallFBF_upnp():
 							else:
 								guestAccess = "LAN"
 
-		if "wlan_guest" in boxData:
-			if boxData["wlan_guest"]["led"] == "led green":
-				guestAccess = re.sub(r".*, ", "", six.ensure_str(boxData["wlan_guest"]["txt"]))
-			else:
-				guestAccess = ""
+		if "wlan_guest" in boxData and boxData["wlan_guest"]["led"] == "led green":
+			guestAccess = re.sub(r".*, ", "", six.ensure_str(boxData["wlan_guest"]["txt"]))
 
 		self.info("faxActive: " + repr(faxActive))
 		self.info("rufumlActive: " + repr(rufumlActive))

@@ -2,10 +2,11 @@
 '''
 Update rev
 $Author: michael $
-$Revision: 1605 $
-$Date: 2022-05-04 12:00:19 +0200 (Wed, 04 May 2022) $
-$Id: plugin.py 1605 2022-05-04 10:00:19Z michael $
+$Revision: 1620 $
+$Date: 2022-05-07 11:12:32 +0200 (Sat, 07 May 2022) $
+$Id: plugin.py 1620 2022-05-07 09:12:32Z michael $
 '''
+
 
 # C0111 (Missing docstring)
 # C0103 (Invalid name)
@@ -364,8 +365,8 @@ class FritzAbout(Screen):
 		self["text"] = Label(
 							"FritzCall Plugin" + "\n\n" +
 							"$Author: michael $"[1:-2] + "\n" +
-							"$Revision: 1605 $"[1:-2] + "\n" +
-							"$Date: 2022-05-04 12:00:19 +0200 (Wed, 04 May 2022) $"[1:23] + "\n"
+							"$Revision: 1620 $"[1:-2] + "\n" +
+							"$Date: 2022-05-07 11:12:32 +0200 (Sat, 07 May 2022) $"[1:23] + "\n"
 							)
 		self["url"] = Label("http://wiki.blue-panel.com/index.php/FritzCall")
 		self.onLayoutFinish.append(self.setWindowTitle)
@@ -1006,13 +1007,14 @@ class FritzMenu(Screen, HelpableScreen):
 				self["gast_inactive"].show()
 				self["FBFGast"].setText(_('Guest access not active'))
 
-			guestAccess = six.ensure_str(guestAccess)
-			if guestAccess and (guestAccess.find('WLAN') != -1 or guestAccess.find('WIFI') != -1):
-				# TRANSLATORS: keep it short, this is a button
-				self["key_yellow"].setText(_("Deactivate WLAN guest access"))
-			else:
-				# TRANSLATORS: keep it short, this is a button
-				self["key_yellow"].setText(_("Activate WLAN guest access"))
+			if guestAccess is not None:
+				guestAccess = six.ensure_str(guestAccess)
+				if (guestAccess.find('WLAN') != -1 or guestAccess.find('WIFI') != -1):
+					# TRANSLATORS: keep it short, this is a button
+					self["key_yellow"].setText(_("Deactivate WLAN guest access"))
+				else:
+					# TRANSLATORS: keep it short, this is a button
+					self["key_yellow"].setText(_("Activate WLAN guest access"))
 
 		except KeyError:
 			error("[FritzCallFBF] _fillMenu: %s", traceback.format_exc())
@@ -2140,7 +2142,7 @@ class FritzCallSetup(Screen, ConfigListScreen, HelpableScreen):
 
 	def setWindowTitle(self):
 		# TRANSLATORS: this is a window title.
-		self.setTitle(_("FritzCall Setup") + " (" + "$Revision: 1605 $"[1:-1] + "$Date: 2022-05-04 12:00:19 +0200 (Wed, 04 May 2022) $"[7:23] + ")")
+		self.setTitle(_("FritzCall Setup") + " (" + "$Revision: 1620 $"[1:-1] + "$Date: 2022-05-07 11:12:32 +0200 (Sat, 07 May 2022) $"[7:23] + ")")
 
 	def keyLeft(self):
 		ConfigListScreen.keyLeft(self)
@@ -2704,7 +2706,7 @@ class FritzReverseLookupAndNotifier(object):
 
 class FritzProtocol(LineReceiver):  # pylint: disable=W0223
 	def __init__(self):
-		info("[FritzProtocol] %s%s starting", "$Revision: 1605 $"[1:-1], "$Date: 2022-05-04 12:00:19 +0200 (Wed, 04 May 2022) $"[7:23])
+		info("[FritzProtocol] %s%s starting", "$Revision: 1620 $"[1:-1], "$Date: 2022-05-07 11:12:32 +0200 (Sat, 07 May 2022) $"[7:23])
 		global mutedOnConnID
 		mutedOnConnID = None
 		self.number = '0'
