@@ -2,11 +2,10 @@
 '''
 Update rev
 $Author: michael $
-$Revision: 1620 $
-$Date: 2022-05-07 11:12:32 +0200 (Sat, 07 May 2022) $
-$Id: plugin.py 1620 2022-05-07 09:12:32Z michael $
+$Revision: 1627 $
+$Date: 2022-05-29 12:35:58 +0200 (Sun, 29 May 2022) $
+$Id: plugin.py 1627 2022-05-29 10:35:58Z michael $
 '''
-
 
 # C0111 (Missing docstring)
 # C0103 (Invalid name)
@@ -365,8 +364,8 @@ class FritzAbout(Screen):
 		self["text"] = Label(
 							"FritzCall Plugin" + "\n\n" +
 							"$Author: michael $"[1:-2] + "\n" +
-							"$Revision: 1620 $"[1:-2] + "\n" +
-							"$Date: 2022-05-07 11:12:32 +0200 (Sat, 07 May 2022) $"[1:23] + "\n"
+							"$Revision: 1627 $"[1:-2] + "\n" +
+							"$Date: 2022-05-29 12:35:58 +0200 (Sun, 29 May 2022) $"[1:23] + "\n"
 							)
 		self["url"] = Label("http://wiki.blue-panel.com/index.php/FritzCall")
 		self.onLayoutFinish.append(self.setWindowTitle)
@@ -2142,7 +2141,7 @@ class FritzCallSetup(Screen, ConfigListScreen, HelpableScreen):
 
 	def setWindowTitle(self):
 		# TRANSLATORS: this is a window title.
-		self.setTitle(_("FritzCall Setup") + " (" + "$Revision: 1620 $"[1:-1] + "$Date: 2022-05-07 11:12:32 +0200 (Sat, 07 May 2022) $"[7:23] + ")")
+		self.setTitle(_("FritzCall Setup") + " (" + "$Revision: 1627 $"[1:-1] + "$Date: 2022-05-29 12:35:58 +0200 (Sun, 29 May 2022) $"[7:23] + ")")
 
 	def keyLeft(self):
 		ConfigListScreen.keyLeft(self)
@@ -2706,7 +2705,7 @@ class FritzReverseLookupAndNotifier(object):
 
 class FritzProtocol(LineReceiver):  # pylint: disable=W0223
 	def __init__(self):
-		info("[FritzProtocol] %s%s starting", "$Revision: 1620 $"[1:-1], "$Date: 2022-05-07 11:12:32 +0200 (Sat, 07 May 2022) $"[7:23])
+		info("[FritzProtocol] %s%s starting", "$Revision: 1627 $"[1:-1], "$Date: 2022-05-29 12:35:58 +0200 (Sun, 29 May 2022) $"[7:23])
 		global mutedOnConnID
 		mutedOnConnID = None
 		self.number = '0'
