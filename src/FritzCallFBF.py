@@ -22,7 +22,13 @@ $Id: FritzCallFBF.py 1626 2022-05-29 10:35:38Z michael $
 # W1201 logging-not-lazy
 # pylint: disable=C0111,C0103,C0301,W0603,C0302,W0611,F0401,E0611,W1201
 from __future__ import absolute_import
-import re, time, hashlib, logging, csv, json, six
+import re
+import time
+import hashlib
+import logging
+import csv
+import json
+import six
 import xml.etree.ElementTree as ET
 from io import StringIO
 from twisted.python.failure import Failure
@@ -94,6 +100,7 @@ def resolveNumber(number, default=None, phonebook=None, debug=logging.debug):
 	# if len(number) > 20: number = number[:20]
 	return number
 
+
 def cleanNumber(number):
 	# self.debug("[FritzCallFBF] " + number)
 	number = re.sub("<.*?>", "", number)
@@ -109,6 +116,7 @@ def cleanNumber(number):
 	if config.plugins.FritzCall.countrycode.value and number.startswith(config.plugins.FritzCall.countrycode.value):
 		number = '0' + number[len(config.plugins.FritzCall.countrycode.value):]
 	return number
+
 
 class FritzCallFBF(object):
 	logger = logging.getLogger("FritzCallFBF.old")
@@ -760,11 +768,11 @@ class FritzCallFBF(object):
 
 		url = "http://%s/cgi-bin/webcm" % config.plugins.FritzCall.hostname.value
 		parms = urlencode({
-			'getpage':'../html/de/menus/menu2.html',
-			'var:lang':'de',
-			'var:pagename':'home',
-			'var:menu':'home',
-			'sid':self._md5Sid
+			'getpage': '../html/de/menus/menu2.html',
+			'var:lang': 'de',
+			'var:pagename': 'home',
+			'var:menu': 'home',
+			'sid': self._md5Sid
 			})
 		self.debug("url: '" + url + "' parms: '" + parms + "'")
 		getPage(url,
@@ -773,7 +781,7 @@ class FritzCallFBF(object):
 			headers={
 					'Content-Type': "application/x-www-form-urlencoded",
 					'Content-Length': str(len(parms))},
-			postdata=parms).addCallback(lambda x:self._okGetInfo(callback, x)).addErrback(self._errorGetInfo)
+			postdata=parms).addCallback(lambda x: self._okGetInfo(callback, x)).addErrback(self._errorGetInfo)
 
 	def _okGetInfo(self, callback, html):
 		def readInfo(html):
@@ -797,17 +805,17 @@ class FritzCallFBF(object):
 			if html.find('home_coninf.txt') != -1:
 				url = "http://%s/cgi-bin/webcm" % config.plugins.FritzCall.hostname.value
 				parms = urlencode({
-					'getpage':'../html/de/home/home_coninf.txt',
-					'sid':self._md5Sid
+					'getpage': '../html/de/home/home_coninf.txt',
+					'sid': self._md5Sid
 					})
 				# self.debug("get coninfo: url: '" + url + "' parms: '" + parms + "'")
 				getPage(url,
-					method = "POST",
-					agent = USERAGENT,
-					headers = {
+					method="POST",
+					agent=USERAGENT,
+					headers={
 							'Content-Type': "application/x-www-form-urlencoded",
 							'Content-Length': str(len(parms))},
-					postdata = parms).addCallback(lambda x:self._okSetConInfo(callback, x)).addErrback(self._errorGetInfo)
+					postdata=parms).addCallback(lambda x: self._okSetConInfo(callback, x)).addErrback(self._errorGetInfo)
 			else:
 				found = re.match(r'.*if \(isNaN\(jetzt\)\)\s*return "";\s*var str = "([^"]*)";', html, re.S)
 				if found:
@@ -839,17 +847,17 @@ class FritzCallFBF(object):
 			if html.find('home_dect.txt') != -1:
 				url = "http://%s/cgi-bin/webcm" % config.plugins.FritzCall.hostname.value
 				parms = urlencode({
-					'getpage':'../html/de/home/home_dect.txt',
-					'sid':self._md5Sid
+					'getpage': '../html/de/home/home_dect.txt',
+					'sid': self._md5Sid
 					})
 				# self.debug("get coninfo: url: '" + url + "' parms: '" + parms + "'")
 				getPage(url,
-					method = "POST",
-					agent = USERAGENT,
-					headers = {
+					method="POST",
+					agent=USERAGENT,
+					headers={
 							'Content-Type': "application/x-www-form-urlencoded",
 							'Content-Length': str(len(parms))},
-					postdata = parms).addCallback(lambda x:self._okSetDect(callback, x)).addErrback(self._errorGetInfo)
+					postdata=parms).addCallback(lambda x: self._okSetDect(callback, x)).addErrback(self._errorGetInfo)
 			else:
 				if html.find('countDect2') != -1:
 					entries = re.compile(r'if \("1" == "1"\) countDect2\+\+;', re.S).findall(html)
@@ -880,17 +888,17 @@ class FritzCallFBF(object):
 			if html.find('home_dsl.txt') != -1:
 				url = "http://%s/cgi-bin/webcm" % config.plugins.FritzCall.hostname.value
 				parms = urlencode({
-					'getpage':'../html/de/home/home_dsl.txt',
-					'sid':self._md5Sid
+					'getpage': '../html/de/home/home_dsl.txt',
+					'sid': self._md5Sid
 					})
 				# self.debug("get dsl state: url: '" + url + "' parms: '" + parms + "'")
 				getPage(url,
-					method = "POST",
-					agent = USERAGENT,
-					headers = {
+					method="POST",
+					agent=USERAGENT,
+					headers={
 							'Content-Type': "application/x-www-form-urlencoded",
 							'Content-Length': str(len(parms))},
-					postdata = parms).addCallback(lambda x:self._okSetDslState(callback, x)).addErrback(self._errorGetInfo)
+					postdata=parms).addCallback(lambda x: self._okSetDslState(callback, x)).addErrback(self._errorGetInfo)
 			else:
 				found = re.match(r'.*function DslStateDisplay \(state\){\s*var state = "(\d+)";', html, re.S)
 				if found:
@@ -906,17 +914,17 @@ class FritzCallFBF(object):
 			if html.find('home_wlan.txt') != -1:
 				url = "http://%s/cgi-bin/webcm" % config.plugins.FritzCall.hostname.value
 				parms = urlencode({
-					'getpage':'../html/de/home/home_wlan.txt',
-					'sid':self._md5Sid
+					'getpage': '../html/de/home/home_wlan.txt',
+					'sid': self._md5Sid
 					})
 				# self.debug("get wlan state: url: '" + url + "' parms: '" + parms + "'")
 				getPage(url,
-					method = "POST",
-					agent = USERAGENT,
-					headers = {
+					method="POST",
+					agent=USERAGENT,
+					headers={
 							'Content-Type': "application/x-www-form-urlencoded",
 							'Content-Length': str(len(parms))},
-					postdata = parms).addCallback(lambda x:self._okSetWlanState(callback, x)).addErrback(self._errorGetInfo)
+					postdata=parms).addCallback(lambda x: self._okSetWlanState(callback, x)).addErrback(self._errorGetInfo)
 			else:
 				found = re.match(r'.*function WlanStateLed \(state\){.*?return StateLed\("(\d+)"\);\s*}', html, re.S)
 				if found:
@@ -1044,21 +1052,21 @@ class FritzCallFBF(object):
 			self._callScreen.close()
 		url = "http://%s/cgi-bin/webcm" % config.plugins.FritzCall.hostname.value
 		parms = urlencode({
-			'getpage':'../html/reboot.html',
-			'var:lang':'de',
-			'var:pagename':'reset',
-			'var:menu':'system',
-			'logic:command/reboot':'../gateway/commands/saveconfig.html',
-			'sid':self._md5Sid
+			'getpage': '../html/reboot.html',
+			'var:lang': 'de',
+			'var:pagename': 'reset',
+			'var:menu': 'system',
+			'logic:command/reboot': '../gateway/commands/saveconfig.html',
+			'sid': self._md5Sid
 			})
 		self.debug("url: '" + url + "' parms: '" + parms + "'")
 		getPage(url,
-			method = "POST",
-			agent = USERAGENT,
-			headers = {
+			method="POST",
+			agent=USERAGENT,
+			headers={
 					'Content-Type': "application/x-www-form-urlencoded",
 					'Content-Length': str(len(parms))},
-			postdata = parms)
+			postdata=parms)
 
 	def _okReset(self, html):  # @UnusedVariable # pylint: disable=W0613
 		self.debug("")
@@ -1087,20 +1095,20 @@ class FritzCallFBF(object):
 		# http://fritz.box/cgi-bin/webcm?getpage=../html/de/menus/menu2.html&var:lang=de&var:menu=fon&var:pagename=sperre
 		url = "http://%s/cgi-bin/webcm" % config.plugins.FritzCall.hostname.value
 		parms = urlencode({
-			'getpage':'../html/de/menus/menu2.html',
-			'var:lang':'de',
-			'var:pagename':'sperre',
-			'var:menu':'fon',
-			'sid':self._md5Sid
+			'getpage': '../html/de/menus/menu2.html',
+			'var:lang': 'de',
+			'var:pagename': 'sperre',
+			'var:menu': 'fon',
+			'sid': self._md5Sid
 			})
 		self.debug("url: '" + url + "' parms: '" + parms + "'")
 		getPage(url,
-			method = "POST",
-			agent = USERAGENT,
-			headers = {
+			method="POST",
+			agent=USERAGENT,
+			headers={
 					'Content-Type': "application/x-www-form-urlencoded",
 					'Content-Length': str(len(parms))},
-			postdata = parms).addCallback(self._okBlacklist).addErrback(self._errorBlacklist)
+			postdata=parms).addCallback(self._okBlacklist).addErrback(self._errorBlacklist)
 
 	def _okBlacklist(self, html):
 		self.debug("")
@@ -1117,6 +1125,7 @@ class FritzCallFBF(object):
 		self.debug(error)
 		text = _("FRITZ!Box - Error getting blacklist: %s") % error.getErrorMessage()
 		self._notify(text)
+
 
 class FritzCallFBF_05_27(object):
 	logger = logging.getLogger("FritzCall.FBF_05_27")
@@ -1147,9 +1156,9 @@ class FritzCallFBF_05_27(object):
 			self.debug("[FritzCallFBF_05_27] notify: try to close callScreen")
 			self._callScreen.close()
 			self._callScreen = None
-		Notifications.AddNotification(MessageBox, text, type = MessageBox.TYPE_ERROR, timeout = config.plugins.FritzCall.timeout.value)
+		Notifications.AddNotification(MessageBox, text, type=MessageBox.TYPE_ERROR, timeout=config.plugins.FritzCall.timeout.value)
 
-	def _login(self, callback = None):
+	def _login(self, callback=None):
 		self.debug("[FritzCallFBF_05_27] _login: " + time.ctime())
 		if callback:
 			self.debug("[FritzCallFBF_05_27] _login: add callback " + callback.__name__)
@@ -1173,13 +1182,13 @@ class FritzCallFBF_05_27(object):
 		else:
 			self.debug("[FritzCallFBF_05_27] _login: not logged in or outdated login")
 			# http://fritz.box/cgi-bin/webcm?getpage=../html/login_sid.xml
-			parms = urlencode({'getpage':'../html/login_sid.xml'})
+			parms = urlencode({'getpage': '../html/login_sid.xml'})
 			url = "http://%s/cgi-bin/webcm" % (config.plugins.FritzCall.hostname.value)
 			self.debug("[FritzCallFBF_05_27] _login: '" + url + "?" + parms + "'")
 			getPage(url,
-				method = "POST",
-				headers = {'Content-Type': "application/x-www-form-urlencoded", 'Content-Length': str(len(parms))},
-				postdata = parms).addCallback(self._md5Login).addErrback(self._errorLogin)
+				method="POST",
+				headers={'Content-Type': "application/x-www-form-urlencoded", 'Content-Length': str(len(parms))},
+				postdata=parms).addCallback(self._md5Login).addErrback(self._errorLogin)
 
 	def _md5Login(self, sidXml):
 		def buildResponse(challenge, text):
@@ -1215,16 +1224,16 @@ class FritzCallFBF_05_27(object):
 				challenge = None
 				self.debug("[FritzCallFBF_05_27] _md5Login: login necessary and no challenge! That is terribly wrong.")
 			parms = urlencode({
-							'getpage':'../html/de/menus/menu2.html',  # 'var:pagename':'home', 'var:menu':'home',
+							'getpage': '../html/de/menus/menu2.html',  # 'var:pagename':'home', 'var:menu':'home',
 							'login:command/response': buildResponse(challenge, self.password),
 							})
 			url = "http://%s/cgi-bin/webcm" % (config.plugins.FritzCall.hostname.value)
 			self.debug("[FritzCallFBF_05_27] _md5Login: '" + url + "?" + parms + "'")
 			getPage(url,
-				method = "POST",
-				agent = USERAGENT,
-				headers = {'Content-Type': "application/x-www-form-urlencoded", 'Content-Length': str(len(parms))},
-				postdata = parms).addCallback(self._gotPageLogin).addErrback(self._errorLogin)
+				method="POST",
+				agent=USERAGENT,
+				headers={'Content-Type': "application/x-www-form-urlencoded", 'Content-Length': str(len(parms))},
+				postdata=parms).addCallback(self._gotPageLogin).addErrback(self._errorLogin)
 		else:
 			for callback in self._loginCallbacks:
 				self.debug("[FritzCallFBF_05_27] _md5Login: calling " + callback.__name__)
@@ -1267,16 +1276,16 @@ class FritzCallFBF_05_27(object):
 		if self._md5LoginTimestamp:
 			self._md5LoginTimestamp = None
 			parms = urlencode({
-							'getpage':'../html/de/menus/menu2.html',  # 'var:pagename':'home', 'var:menu':'home',
-							'login:command/logout':'bye bye Fritz'
+							'getpage': '../html/de/menus/menu2.html',  # 'var:pagename':'home', 'var:menu':'home',
+							'login:command/logout': 'bye bye Fritz'
 							})
 			url = "http://%s/cgi-bin/webcm" % (config.plugins.FritzCall.hostname.value)
 			self.debug("[FritzCallFBF_05_27] logout: '" + url + "' parms: '" + parms + "'")
 			getPage(url,
-				method = "POST",
-				agent = USERAGENT,
-				headers = {'Content-Type': "application/x-www-form-urlencoded", 'Content-Length': str(len(parms))},
-				postdata = parms).addErrback(self._errorLogout)
+				method="POST",
+				agent=USERAGENT,
+				headers={'Content-Type': "application/x-www-form-urlencoded", 'Content-Length': str(len(parms))},
+				postdata=parms).addErrback(self._errorLogout)
 
 	def _errorLogout(self, error):
 		self.debug("[FritzCallFBF_05_27] _errorLogout: %s", error)
@@ -1297,15 +1306,15 @@ class FritzCallFBF_05_27(object):
 				return
 		# look for phonebook called dreambox or Dreambox
 		parms = urlencode({
-						'sid':self._md5Sid,
+						'sid': self._md5Sid,
 						})
 		url = "http://%s/fon_num/fonbook_select.lua" % (config.plugins.FritzCall.hostname.value)
 		self.debug("[FritzCallFBF_05_27] _selectPhonebook: '" + url + "' parms: '" + parms + "'")
 		getPage(url,
-			method = "POST",
-			agent = USERAGENT,
-			headers = {'Content-Type': "application/x-www-form-urlencoded", 'Content-Length': str(len(parms))},
-			postdata = parms).addCallback(self._loadFritzBoxPhonebook).addErrback(self._errorLoad)
+			method="POST",
+			agent=USERAGENT,
+			headers={'Content-Type': "application/x-www-form-urlencoded", 'Content-Length': str(len(parms))},
+			postdata=parms).addCallback(self._loadFritzBoxPhonebook).addErrback(self._errorLoad)
 
 	def _loadFritzBoxPhonebook(self, html):
 		# Firmware 05.27 onwards
@@ -1318,16 +1327,16 @@ class FritzCallFBF_05_27(object):
 			bookid = 1
 		# http://192.168.178.1/fon_num/fonbook_list.lua?sid=2faec13b0000f3a2
 		parms = urlencode({
-						'bookid':bookid,
-						'sid':self._md5Sid,
+						'bookid': bookid,
+						'sid': self._md5Sid,
 						})
 		url = "http://%s/fon_num/fonbook_list.lua" % (config.plugins.FritzCall.hostname.value)
 		self.debug("[FritzCallFBF_05_27] _loadFritzBoxPhonebookNew: '" + url + "' parms: '" + parms + "'")
 		getPage(url,
-			method = "POST",
-			agent = USERAGENT,
-			headers = {'Content-Type': "application/x-www-form-urlencoded", 'Content-Length': str(len(parms))},
-			postdata = parms).addCallback(self._parseFritzBoxPhonebook).addErrback(self._errorLoad)
+			method="POST",
+			agent=USERAGENT,
+			headers={'Content-Type': "application/x-www-form-urlencoded", 'Content-Length': str(len(parms))},
+			postdata=parms).addCallback(self._parseFritzBoxPhonebook).addErrback(self._errorLoad)
 
 	def _parseFritzBoxPhonebook(self, html):
 		self.debug("[FritzCallFBF_05_27] _parseFritzBoxPhonebookNew")
@@ -1417,11 +1426,11 @@ class FritzCallFBF_05_27(object):
 		if self._callScreen:
 			self._callScreen.updateStatus(_("finishing"))
 		# http://192.168.178.1/fon_num/foncalls_list.lua?sid=da78ab0797197dc7
-		parms = urlencode({'sid':self._md5Sid})
+		parms = urlencode({'sid': self._md5Sid})
 		url = "http://%s/fon_num/foncalls_list.lua?%s" % (config.plugins.FritzCall.hostname.value, parms)
-		getPage(url).addCallback(lambda x:self._gotPageCalls(callback, x)).addErrback(self._errorCalls)
+		getPage(url).addCallback(lambda x: self._gotPageCalls(callback, x)).addErrback(self._errorCalls)
 
-	def _gotPageCalls(self, callback, html = ""):
+	def _gotPageCalls(self, callback, html=""):
 
 		self.debug("[FritzCallFBF_05_27] _gotPageCalls")
 		if self._callScreen:
@@ -1516,22 +1525,22 @@ class FritzCallFBF_05_27(object):
 				return
 		url = "http://%s/cgi-bin/webcm" % config.plugins.FritzCall.hostname.value
 		parms = urlencode({
-			'getpage':'../html/de/menus/menu2.html',
-			'var:pagename':'fonbuch',
-			'var:menu':'home',
-			'telcfg:settings/UseClickToDial':'1',
-			'telcfg:settings/DialPort':config.plugins.FritzCall.extension.value,
-			'telcfg:command/Dial':number,
-			'sid':self._md5Sid
+			'getpage': '../html/de/menus/menu2.html',
+			'var:pagename': 'fonbuch',
+			'var:menu': 'home',
+			'telcfg:settings/UseClickToDial': '1',
+			'telcfg:settings/DialPort': config.plugins.FritzCall.extension.value,
+			'telcfg:command/Dial': number,
+			'sid': self._md5Sid
 			})
 		self.debug("[FritzCallFBF_05_27] dial url: '" + url + "' parms: '" + parms + "'")
 		getPage(url,
-			method = "POST",
-			agent = USERAGENT,
-			headers = {
+			method="POST",
+			agent=USERAGENT,
+			headers={
 					'Content-Type': "application/x-www-form-urlencoded",
 					'Content-Length': str(len(parms))},
-			postdata = parms).addCallback(self._okDial).addErrback(self._errorDial)
+			postdata=parms).addCallback(self._okDial).addErrback(self._errorDial)
 
 	def _okDial(self, html):  # @UnusedVariable # pylint: disable=W0613
 		self.debug("[FritzCallFBF_05_27] okDial")
@@ -1544,7 +1553,7 @@ class FritzCallFBF_05_27(object):
 	def changeWLAN(self, statusWLAN, callback):  # @UnusedVariable # pylint: disable=W0613
 		''' get status information from FBF '''
 		self.debug("[FritzCallFBF_05_27] changeWLAN start")
-		Notifications.AddNotification(MessageBox, _("not available with this firmware version"), type = MessageBox.TYPE_ERROR, timeout = config.plugins.FritzCall.timeout.value)
+		Notifications.AddNotification(MessageBox, _("not available with this firmware version"), type=MessageBox.TYPE_ERROR, timeout=config.plugins.FritzCall.timeout.value)
 		return
 
 	def _changeWLAN(self, statusWLAN, callback, html):
@@ -1568,17 +1577,17 @@ class FritzCallFBF_05_27(object):
 
 		url = "http://%s//wlan/wlan_settings.lua" % config.plugins.FritzCall.hostname.value
 		parms = urlencode({
-			'active':str(statusWLAN),
-			'sid':self._md5Sid
+			'active': str(statusWLAN),
+			'sid': self._md5Sid
 			})
 		self.debug("[FritzCallFBF] changeWLAN url: '" + url + "' parms: '" + parms + "'")
 		getPage(url,
-			method = "POST",
-			agent = USERAGENT,
-			headers = {
+			method="POST",
+			agent=USERAGENT,
+			headers={
 					'Content-Type': "application/x-www-form-urlencoded",
 					'Content-Length': str(len(parms))},
-			postdata = parms).addCallback(self._okChangeWLAN, callback).addErrback(self._errorChangeWLAN, callback)
+			postdata=parms).addCallback(self._okChangeWLAN, callback).addErrback(self._errorChangeWLAN, callback)
 
 	def _okChangeWLAN(self, callback, html):  # @UnusedVariable # pylint: disable=W0613
 		self.debug("[FritzCallFBF] _okChangeWLAN")
@@ -1593,7 +1602,7 @@ class FritzCallFBF_05_27(object):
 	def changeMailbox(self, whichMailbox, callback):  # @UnusedVariable # pylint: disable=W0613
 		''' switch mailbox on/off '''
 		self.debug("[FritzCallFBF_05_27] changeMailbox start: " + str(whichMailbox))
-		Notifications.AddNotification(MessageBox, _("not available with this firmware version"), type = MessageBox.TYPE_ERROR, timeout = config.plugins.FritzCall.timeout.value)
+		Notifications.AddNotification(MessageBox, _("not available with this firmware version"), type=MessageBox.TYPE_ERROR, timeout=config.plugins.FritzCall.timeout.value)
 
 	def _changeMailbox(self, whichMailbox, html):  # @UnusedVariable  pylint: disable=W0613
 		return
@@ -1609,7 +1618,7 @@ class FritzCallFBF_05_27(object):
 	def getInfo(self, callback):
 		''' get status information from FBF '''
 		self.debug("[FritzCallFBF_05_27] getInfo")
-		self._login(lambda x:self._getInfo(callback, x))
+		self._login(lambda x: self._getInfo(callback, x))
 
 	def _getInfo(self, callback, html):
 		self.debug("[FritzCallFBF_05_27] _getInfo: verify login")
@@ -1624,16 +1633,16 @@ class FritzCallFBF_05_27(object):
 
 		url = "http://%s/home/home.lua" % config.plugins.FritzCall.hostname.value
 		parms = urlencode({
-			'sid':self._md5Sid
+			'sid': self._md5Sid
 			})
 		self.debug("[FritzCallFBF_05_27] _getInfo url: '" + url + "' parms: '" + parms + "'")
 		getPage(url,
-			method = "POST",
-			agent = USERAGENT,
-			headers = {
+			method="POST",
+			agent=USERAGENT,
+			headers={
 					'Content-Type': "application/x-www-form-urlencoded",
 					'Content-Length': str(len(parms))},
-			postdata = parms).addCallback(lambda x:self._okGetInfo(callback, x)).addErrback(self._errorGetInfo)
+			postdata=parms).addCallback(lambda x: self._okGetInfo(callback, x)).addErrback(self._errorGetInfo)
 
 	def _okGetInfo(self, callback, html):
 
@@ -1757,21 +1766,21 @@ class FritzCallFBF_05_27(object):
 			self._callScreen.close()
 		url = "http://%s/cgi-bin/webcm" % config.plugins.FritzCall.hostname.value
 		parms = urlencode({
-			'getpage':'../html/reboot.html',
-			'var:lang':'de',
-			'var:pagename':'reset',
-			'var:menu':'system',
-			'logic:command/reboot':'../gateway/commands/saveconfig.html',
-			'sid':self._md5Sid
+			'getpage': '../html/reboot.html',
+			'var:lang': 'de',
+			'var:pagename': 'reset',
+			'var:menu': 'system',
+			'logic:command/reboot': '../gateway/commands/saveconfig.html',
+			'sid': self._md5Sid
 			})
 		self.debug("[FritzCallFBF_05_27] _reset url: '" + url + "' parms: '" + parms + "'")
 		getPage(url,
-			method = "POST",
-			agent = USERAGENT,
-			headers = {
+			method="POST",
+			agent=USERAGENT,
+			headers={
 					'Content-Type': "application/x-www-form-urlencoded",
 					'Content-Length': str(len(parms))},
-			postdata = parms)
+			postdata=parms)
 
 	def _okReset(self, html):  # @UnusedVariable # pylint: disable=W0613
 		self.debug("[FritzCallFBF_05_27] _okReset")
@@ -1785,16 +1794,16 @@ class FritzCallFBF_05_27(object):
 		# http://fritz.box/cgi-bin/webcm?getpage=../html/de/menus/menu2.html&var:lang=de&var:menu=fon&var:pagename=sperre
 		url = "http://%s/fon_num/sperre.lua" % config.plugins.FritzCall.hostname.value
 		parms = urlencode({
-			'sid':self._md5Sid
+			'sid': self._md5Sid
 			})
 		self.debug("[FritzCallFBF_05_27] _readBlacklist url: '" + url + "' parms: '" + parms + "'")
 		getPage(url,
-			method = "POST",
-			agent = USERAGENT,
-			headers = {
+			method="POST",
+			agent=USERAGENT,
+			headers={
 					'Content-Type': "application/x-www-form-urlencoded",
 					'Content-Length': str(len(parms))},
-			postdata = parms).addCallback(self._okBlacklist).addErrback(self._errorBlacklist)
+			postdata=parms).addCallback(self._okBlacklist).addErrback(self._errorBlacklist)
 
 	def _okBlacklist(self, html):
 		self.debug("[FritzCallFBF_05_27] _okBlacklist")
@@ -1816,6 +1825,7 @@ class FritzCallFBF_05_27(object):
 		self.debug("[FritzCallFBF_05_27] _errorBlacklist: %s", error)
 		text = _("FRITZ!Box - Error getting blacklist: %s") % error.getErrorMessage()
 		self._notify(text)
+
 
 class FritzCallFBF_05_50(object):
 	logger = logging.getLogger("FritzCall.FBF_05_50")
@@ -1844,15 +1854,15 @@ class FritzCallFBF_05_50(object):
 			self.debug("try to close callScreen")
 			self._callScreen.close()
 			self._callScreen = None
-		Notifications.AddNotification(MessageBox, text, type = MessageBox.TYPE_ERROR, timeout = config.plugins.FritzCall.timeout.value)
+		Notifications.AddNotification(MessageBox, text, type=MessageBox.TYPE_ERROR, timeout=config.plugins.FritzCall.timeout.value)
 
-	def _login(self, callback = None):
+	def _login(self, callback=None):
 		# http://fritz.box/login_lua.xml
 		url = "http://%s/login_sid.lua" % (config.plugins.FritzCall.hostname.value)
 		self.debug(time.ctime() + " :" + url)
 		getPage(url,
-			method = "GET",
-			headers = {'Content-Type': "application/x-www-form-urlencoded"}).addCallback(self._md5Login, callback).addErrback(self._errorLogin)
+			method="GET",
+			headers={'Content-Type': "application/x-www-form-urlencoded"}).addCallback(self._md5Login, callback).addErrback(self._errorLogin)
 
 	def _md5Login(self, sidXml, callback):
 		def buildResponse(challenge, text):
@@ -1905,10 +1915,10 @@ class FritzCallFBF_05_50(object):
 		url = "http://%s/login_sid.lua" % (config.plugins.FritzCall.hostname.value)
 		self.debug(url + "?" + parms)
 		getPage(url,
-			method = "POST",
-			agent = USERAGENT,
-			headers = {'Content-Type': "application/x-www-form-urlencoded", 'Content-Length': str(len(parms))},
-			postdata = parms).addCallback(self._gotPageLogin, callback).addErrback(self._errorLogin)
+			method="POST",
+			agent=USERAGENT,
+			headers={'Content-Type': "application/x-www-form-urlencoded", 'Content-Length': str(len(parms))},
+			postdata=parms).addCallback(self._gotPageLogin, callback).addErrback(self._errorLogin)
 
 	def _gotPageLogin(self, sidXml, callback):
 		if self._callScreen:
@@ -1948,16 +1958,16 @@ class FritzCallFBF_05_50(object):
 
 	def _logout(self, md5Sid, what):
 		parms = urlencode({
-						'sid':md5Sid,
-						'logout':'bye bye Fritz'
+						'sid': md5Sid,
+						'logout': 'bye bye Fritz'
 						})
 		url = "http://%s/login_sid.lua" % (config.plugins.FritzCall.hostname.value)
 		self.debug("(" + what + ") " + time.ctime() + ": " + url + "?" + parms)
 		getPage(url,
-			method = "POST",
-			agent = USERAGENT,
-			headers = {'Content-Type': "application/x-www-form-urlencoded", 'Content-Length': str(len(parms))},
-			postdata = parms).addErrback(self._errorLogout)
+			method="POST",
+			agent=USERAGENT,
+			headers={'Content-Type': "application/x-www-form-urlencoded", 'Content-Length': str(len(parms))},
+			postdata=parms).addErrback(self._errorLogout)
 
 	def _errorLogout(self, error):
 		self.exception(error)
@@ -1968,17 +1978,17 @@ class FritzCallFBF_05_50(object):
 		self.phonebook = phonebook
 		self._login(self._selectFritzBoxPhonebook)
 
-	def _selectFritzBoxPhonebook(self, md5Sid, html = None):  # @UnusedVariable  pylint: disable=W0613
+	def _selectFritzBoxPhonebook(self, md5Sid, html=None):  # @UnusedVariable  pylint: disable=W0613
 		parms = urlencode({
-						'sid':md5Sid,
+						'sid': md5Sid,
 						})
 		url = "http://%s/fon_num/fonbook_select.lua" % (config.plugins.FritzCall.hostname.value)
 		self.debug(url + "?" + parms)
 		getPage(url,
-			method = "POST",
-			agent = USERAGENT,
-			headers = {'Content-Type': "application/x-www-form-urlencoded", 'Content-Length': str(len(parms))},
-			postdata = parms).addCallback(self._loadFritzBoxPhonebook, md5Sid).addErrback(self._errorLoad, md5Sid)
+			method="POST",
+			agent=USERAGENT,
+			headers={'Content-Type': "application/x-www-form-urlencoded", 'Content-Length': str(len(parms))},
+			postdata=parms).addCallback(self._loadFritzBoxPhonebook, md5Sid).addErrback(self._errorLoad, md5Sid)
 
 	def _loadFritzBoxPhonebook(self, html, md5Sid):
 		# Firmware 05.27 onwards
@@ -1992,18 +2002,18 @@ class FritzCallFBF_05_50(object):
 
 		# http://192.168.178.1/fon_num/fonbook_list.lua?sid=2faec13b0000f3a2
 		parms = urlencode({
-						'bookid':bookid,
-						'sid':md5Sid,
-						'cancel':'',
-						'apply':'uiApply',
+						'bookid': bookid,
+						'sid': md5Sid,
+						'cancel': '',
+						'apply': 'uiApply',
 						})
 		url = "http://%s/fon_num/fonbook_select.lua" % (config.plugins.FritzCall.hostname.value)
 		self.debug(url + "?" + parms)
 		getPage(url,
-			method = "POST",
-			agent = USERAGENT,
-			headers = {'Content-Type': "application/x-www-form-urlencoded", 'Content-Length': str(len(parms))},
-			postdata = parms).addCallback(self._parseFritzBoxPhonebook, md5Sid).addErrback(self._errorLoad, md5Sid)
+			method="POST",
+			agent=USERAGENT,
+			headers={'Content-Type': "application/x-www-form-urlencoded", 'Content-Length': str(len(parms))},
+			postdata=parms).addCallback(self._parseFritzBoxPhonebook, md5Sid).addErrback(self._errorLoad, md5Sid)
 
 	def _parseFritzBoxPhonebook(self, html, md5Sid):
 		self.debug("")
@@ -2085,18 +2095,18 @@ class FritzCallFBF_05_50(object):
 		self.debug("")
 		self._callScreen = callScreen
 		self._callType = callType
-		self._login(lambda md5Sid:self._getCalls(callback, md5Sid))
+		self._login(lambda md5Sid: self._getCalls(callback, md5Sid))
 
 	def _getCalls(self, callback, md5Sid):  # pylint: disable=W0613
 		self.debug("")
 		if self._callScreen:
 			self._callScreen.updateStatus(_("preparing"))
 		# besser csv mit: https://fritz.box/fon_num/foncalls_list.lua?sid=dea373c2d0257a41&csv=
-		parms = urlencode({'sid':md5Sid, 'csv':''})
+		parms = urlencode({'sid': md5Sid, 'csv': ''})
 		url = "http://%s/fon_num/foncalls_list.lua?%s" % (config.plugins.FritzCall.hostname.value, parms)
-		getPage(url).addCallback(lambda x:self._gotPageCalls(callback, x, md5Sid)).addErrback(self._errorCalls, md5Sid)
+		getPage(url).addCallback(lambda x: self._gotPageCalls(callback, x, md5Sid)).addErrback(self._errorCalls, md5Sid)
 
-	def _gotPageCalls(self, callback, csvString = "", md5Sid = ""):
+	def _gotPageCalls(self, callback, csvString="", md5Sid=""):
 
 		self.debug("")
 		if self._callScreen:
@@ -2116,7 +2126,7 @@ class FritzCallFBF_05_50(object):
 		#=======================================================================
 
 		# 0: direct; 1: date; 2: Name; 3: Nummer; 4: Nebenstelle; 5: Eigene Rufnumme; 6: Dauer
-		calls = csv.reader(StringIO(csvString), delimiter = ';')
+		calls = csv.reader(StringIO(csvString), delimiter=';')
 		next(calls)  # skip sep
 		next(calls)  # skip header line
 		for call in calls:
@@ -2189,22 +2199,22 @@ class FritzCallFBF_05_50(object):
 	def _dial(self, number, md5Sid):
 		url = "http://%s/cgi-bin/webcm" % config.plugins.FritzCall.hostname.value
 		parms = urlencode({
-			'getpage':'../html/de/menus/menu2.html',
-			'var:pagename':'fonbuch',
-			'var:menu':'home',
-			'telcfg:settings/UseClickToDial':'1',
-			'telcfg:settings/DialPort':config.plugins.FritzCall.extension.value,
-			'telcfg:command/Dial':number,
-			'sid':md5Sid
+			'getpage': '../html/de/menus/menu2.html',
+			'var:pagename': 'fonbuch',
+			'var:menu': 'home',
+			'telcfg:settings/UseClickToDial': '1',
+			'telcfg:settings/DialPort': config.plugins.FritzCall.extension.value,
+			'telcfg:command/Dial': number,
+			'sid': md5Sid
 			})
 		self.info("url: " + url + "?" + parms)
 		getPage(url,
-			method = "POST",
-			agent = USERAGENT,
-			headers = {
+			method="POST",
+			agent=USERAGENT,
+			headers={
 					'Content-Type': "application/x-www-form-urlencoded",
 					'Content-Length': str(len(parms))},
-			postdata = parms).addCallback(self._okDial, md5Sid).addErrback(self._errorDial, md5Sid)
+			postdata=parms).addCallback(self._okDial, md5Sid).addErrback(self._errorDial, md5Sid)
 
 	def _okDial(self, html, md5Sid):  # @UnusedVariable # pylint: disable=W0613
 		self.debug("")
@@ -2235,31 +2245,31 @@ class FritzCallFBF_05_50(object):
 	def _changeWLAN(self, statusWLAN, callback, md5Sid):
 		if statusWLAN == '0':
 			parms = urlencode({
-				'sid':md5Sid,
-				'apply':'',
-				'cancel':'',
-				'btn_refresh':''
+				'sid': md5Sid,
+				'apply': '',
+				'cancel': '',
+				'btn_refresh': ''
 				})
 		else:
 			parms = urlencode({
-				'sid':md5Sid,
-				'active':'on',
-				'active_24':'on',
-				'active_5':'on',
-				'hidden_ssid':'on',
-				'apply':'',
-				'cancel':'',
-				'btn_refresh':''
+				'sid': md5Sid,
+				'active': 'on',
+				'active_24': 'on',
+				'active_5': 'on',
+				'hidden_ssid': 'on',
+				'apply': '',
+				'cancel': '',
+				'btn_refresh': ''
 				})
 
 		url = "http://%s//wlan/wlan_settings.lua" % config.plugins.FritzCall.hostname.value
 		self.debug("url: " + url + "?" + parms)
 		getPage(url,
-			method = "POST",
-			agent = USERAGENT,
-			headers = {
+			method="POST",
+			agent=USERAGENT,
+			headers={
 					'Content-Type': "application/x-www-form-urlencoded"},
-			postdata = parms).addCallback(self._okChangeWLAN, callback, md5Sid).addErrback(self._errorChangeWLAN, md5Sid)
+			postdata=parms).addCallback(self._okChangeWLAN, callback, md5Sid).addErrback(self._errorChangeWLAN, md5Sid)
 
 	def _okChangeWLAN(self, html, callback, md5Sid):  # @UnusedVariable # pylint: disable=W0613
 		self.debug("")
@@ -2284,46 +2294,46 @@ class FritzCallFBF_05_50(object):
 
 	def _changeGuestAccessWLAN(self, statusGuestAccess, callback, md5Sid):
 		parms = {
-				'sid':md5Sid,
-				'autoupdate':'on',
-				'btnSave':'',
-				'btnChancel':''
+				'sid': md5Sid,
+				'autoupdate': 'on',
+				'btnSave': '',
+				'btnChancel': ''
 		}
 		if statusGuestAccess.find('WLAN') != -1:
 			parms.update({
-					'print':'',
+					'print': '',
 			})
 		else:
 			parms.update({
-					'activate_guest_access':'on',
-					'guest_ssid':config.plugins.FritzCall.guestSSID.value,
-					'disconnect_guest_access':'on',
+					'activate_guest_access': 'on',
+					'guest_ssid': config.plugins.FritzCall.guestSSID.value,
+					'disconnect_guest_access': 'on',
 					})
 			if config.plugins.FritzCall.guestUptime.value:
 				parms.update({
-							'down_time_activ':'on',
-							'down_time_value':config.plugins.FritzCall.guestUptime.value,
-							'disconnect_guest_access':'on',
+							'down_time_activ': 'on',
+							'down_time_value': config.plugins.FritzCall.guestUptime.value,
+							'disconnect_guest_access': 'on',
 					})
 			if config.plugins.FritzCall.guestSecure.value:
 				parms.update({
-							'sec_mode':'4',
+							'sec_mode': '4',
 							'wpa_key': self.guestPassword,
 							})
 			else:
 				parms.update({
-							'sec_mode':'5',
+							'sec_mode': '5',
 							})
 		parms = urlencode(parms)
 
 		url = "http://%s/wlan/guest_access.lua" % config.plugins.FritzCall.hostname.value
 		self.debug("url: " + url + "?" + parms)
 		getPage(url,
-			method = "POST",
-			agent = USERAGENT,
-			headers = {
+			method="POST",
+			agent=USERAGENT,
+			headers={
 					'Content-Type': "application/x-www-form-urlencoded"},
-			postdata = parms).addCallback(self._okChangeGuestAccess, callback, md5Sid).addErrback(self._errorChangeGuestAccess, md5Sid)
+			postdata=parms).addCallback(self._okChangeGuestAccess, callback, md5Sid).addErrback(self._errorChangeGuestAccess, md5Sid)
 
 	def _okChangeGuestAccess(self, html, callback, md5Sid):  # @UnusedVariable # pylint: disable=W0613
 		self.debug("")
@@ -2343,7 +2353,7 @@ class FritzCallFBF_05_50(object):
 	def changeMailbox(self, whichMailbox, callback):  # @UnusedVariable # pylint: disable=W0613
 		''' switch mailbox on/off '''
 		self.debug("start: " + str(whichMailbox))
-		Notifications.AddNotification(MessageBox, _("not available with this firmware version"), type = MessageBox.TYPE_ERROR, timeout = config.plugins.FritzCall.timeout.value)
+		Notifications.AddNotification(MessageBox, _("not available with this firmware version"), type=MessageBox.TYPE_ERROR, timeout=config.plugins.FritzCall.timeout.value)
 
 	def getInfo(self, callback):
 		''' get status information from FBF '''
@@ -2357,16 +2367,16 @@ class FritzCallFBF_05_50(object):
 
 		url = "http://%s/home/home.lua" % config.plugins.FritzCall.hostname.value
 		parms = urlencode({
-			'sid':md5Sid
+			'sid': md5Sid
 			})
 		self.debug("url: " + url + "?" + parms)
 		getPage(url,
-			method = "POST",
-			agent = USERAGENT,
-			headers = {
+			method="POST",
+			agent=USERAGENT,
+			headers={
 					'Content-Type': "application/x-www-form-urlencoded",
 					'Content-Length': str(len(parms))},
-			postdata = parms).addCallback(lambda x:self._okGetInfo(callback, x, md5Sid)).addErrback(self._errorGetInfo, md5Sid)
+			postdata=parms).addCallback(lambda x: self._okGetInfo(callback, x, md5Sid)).addErrback(self._errorGetInfo, md5Sid)
 
 	def _okGetInfo(self, callback, html, md5Sid):
 
@@ -2543,16 +2553,16 @@ class FritzCallFBF_05_50(object):
 
 		url = "http://%s/system/reboot.lua" % config.plugins.FritzCall.hostname.value
 		parms = urlencode({
-			'reboot':'',
-			'sid':md5Sid
+			'reboot': '',
+			'sid': md5Sid
 			})
 		self.debug("url: " + url + "?" + parms)
 		getPage(url,
-			method = "POST",
-			agent = USERAGENT,
-			headers = {
+			method="POST",
+			agent=USERAGENT,
+			headers={
 					'Content-Type': "application/x-www-form-urlencoded"},
-			postdata = parms).addCallback(self._okReset, md5Sid).addErrback(self._errorReset, md5Sid)
+			postdata=parms).addCallback(self._okReset, md5Sid).addErrback(self._errorReset, md5Sid)
 
 	def _okReset(self, html, md5Sid):  # @UnusedVariable # pylint: disable=W0613
 		self.debug("")
@@ -2577,16 +2587,16 @@ class FritzCallFBF_05_50(object):
 		# http://fritz.box/cgi-bin/webcm?getpage=../html/de/menus/menu2.html&var:lang=de&var:menu=fon&var:pagename=sperre
 		url = "http://%s/fon_num/sperre.lua" % config.plugins.FritzCall.hostname.value
 		parms = urlencode({
-			'sid':md5Sid
+			'sid': md5Sid
 			})
 		self.debug("url: " + url + "?" + parms)
 		getPage(url,
-			method = "POST",
-			agent = USERAGENT,
-			headers = {
+			method="POST",
+			agent=USERAGENT,
+			headers={
 					'Content-Type': "application/x-www-form-urlencoded",
 					'Content-Length': str(len(parms))},
-			postdata = parms).addCallback(self._okBlacklist, md5Sid).addErrback(self._errorBlacklist, md5Sid)
+			postdata=parms).addCallback(self._okBlacklist, md5Sid).addErrback(self._errorBlacklist, md5Sid)
 
 	def _okBlacklist(self, html, md5Sid):
 		self.debug("")
@@ -2623,6 +2633,7 @@ class FritzCallFBF_05_50(object):
 		self._notify(text)
 		self._logout(md5Sid, "_errorBlacklist")
 
+
 class FritzCallFBF_06_35(object):
 	logger = logging.getLogger("FritzCall.FBF_06_35")
 	debug = logger.debug
@@ -2650,15 +2661,15 @@ class FritzCallFBF_06_35(object):
 			self.debug("try to close callScreen")
 			self._callScreen.close()
 			self._callScreen = None
-		Notifications.AddNotification(MessageBox, text, type = MessageBox.TYPE_ERROR, timeout = config.plugins.FritzCall.timeout.value)
+		Notifications.AddNotification(MessageBox, text, type=MessageBox.TYPE_ERROR, timeout=config.plugins.FritzCall.timeout.value)
 
-	def _login(self, callback = None):
+	def _login(self, callback=None):
 		# http://fritz.box/login_lua.xml
 		url = "http://%s/login_sid.lua" % (config.plugins.FritzCall.hostname.value)
 		self.debug(time.ctime() + " :" + url)
 		getPage(url,
-			method = "GET",
-			headers = {'Content-Type': "application/x-www-form-urlencoded"}).addCallback(self._md5Login, callback).addErrback(self._errorLogin)
+			method="GET",
+			headers={'Content-Type': "application/x-www-form-urlencoded"}).addCallback(self._md5Login, callback).addErrback(self._errorLogin)
 
 	def _md5Login(self, sidXml, callback):
 		def buildResponse(challenge, text):
@@ -2711,10 +2722,10 @@ class FritzCallFBF_06_35(object):
 		url = "http://%s/login_sid.lua" % (config.plugins.FritzCall.hostname.value)
 		self.debug(url + "?" + parms)
 		getPage(url,
-			method = "POST",
-			agent = USERAGENT,
-			headers = {'Content-Type': "application/x-www-form-urlencoded", 'Content-Length': str(len(parms))},
-			postdata = parms).addCallback(self._gotPageLogin, callback).addErrback(self._errorLogin)
+			method="POST",
+			agent=USERAGENT,
+			headers={'Content-Type': "application/x-www-form-urlencoded", 'Content-Length': str(len(parms))},
+			postdata=parms).addCallback(self._gotPageLogin, callback).addErrback(self._errorLogin)
 
 	def _gotPageLogin(self, sidXml, callback):
 		if self._callScreen:
@@ -2754,16 +2765,16 @@ class FritzCallFBF_06_35(object):
 
 	def _logout(self, md5Sid, what):
 		parms = urlencode({
-						'sid':md5Sid,
-						'logout':'bye bye Fritz'
+						'sid': md5Sid,
+						'logout': 'bye bye Fritz'
 						})
 		url = "http://%s/login_sid.lua" % (config.plugins.FritzCall.hostname.value)
 		self.debug("(" + what + ") " + time.ctime() + ": " + url + "?" + parms)
 		getPage(url,
-			method = "POST",
-			agent = USERAGENT,
-			headers = {'Content-Type': "application/x-www-form-urlencoded", 'Content-Length': str(len(parms))},
-			postdata = parms).addErrback(self._errorLogout)
+			method="POST",
+			agent=USERAGENT,
+			headers={'Content-Type': "application/x-www-form-urlencoded", 'Content-Length': str(len(parms))},
+			postdata=parms).addErrback(self._errorLogout)
 
 	def _errorLogout(self, error):
 		text = _("FRITZ!Box - Error logging out: %s") % error.getErrorMessage()
@@ -2777,16 +2788,16 @@ class FritzCallFBF_06_35(object):
 	def _loadFritzBoxPhonebook(self, md5Sid):
 
 		parms = urlencode({
-						'sid':md5Sid,
-						'page':'bookLi'
+						'sid': md5Sid,
+						'page': 'bookLi'
 						})
 		url = "http://%s/data.lua" % (config.plugins.FritzCall.hostname.value)
 		self.debug(url + "?" + parms)
 		getPage(url,
-			method = "POST",
-			agent = USERAGENT,
-			headers = {'Content-Type': "application/x-www-form-urlencoded", 'Content-Length': str(len(parms))},
-			postdata = parms).addCallback(self._parseFritzBoxPhonebook, md5Sid).addErrback(self._errorLoad, md5Sid)
+			method="POST",
+			agent=USERAGENT,
+			headers={'Content-Type': "application/x-www-form-urlencoded", 'Content-Length': str(len(parms))},
+			postdata=parms).addCallback(self._parseFritzBoxPhonebook, md5Sid).addErrback(self._errorLoad, md5Sid)
 
 	def _parseFritzBoxPhonebook(self, html, md5Sid):
 		self.debug("")
@@ -2853,18 +2864,18 @@ class FritzCallFBF_06_35(object):
 		self.debug("")
 		self._callScreen = callScreen
 		self._callType = callType
-		self._login(lambda md5Sid:self._getCalls(callback, md5Sid))
+		self._login(lambda md5Sid: self._getCalls(callback, md5Sid))
 
 	def _getCalls(self, callback, md5Sid):  # pylint: disable=W0613
 		self.debug("")
 		if self._callScreen:
 			self._callScreen.updateStatus(_("preparing"))
 		# besser csv mit: https://fritz.box/fon_num/foncalls_list.lua?sid=dea373c2d0257a41&csv=
-		parms = urlencode({'sid':md5Sid, 'csv':''})
+		parms = urlencode({'sid': md5Sid, 'csv': ''})
 		url = "http://%s/fon_num/foncalls_list.lua?%s" % (config.plugins.FritzCall.hostname.value, parms)
-		getPage(url).addCallback(lambda x:self._gotPageCalls(callback, x, md5Sid)).addErrback(self._errorCalls, md5Sid)
+		getPage(url).addCallback(lambda x: self._gotPageCalls(callback, x, md5Sid)).addErrback(self._errorCalls, md5Sid)
 
-	def _gotPageCalls(self, callback, csvString = "", md5Sid = ""):
+	def _gotPageCalls(self, callback, csvString="", md5Sid=""):
 
 		self.debug("")
 		if self._callScreen:
@@ -2884,7 +2895,7 @@ class FritzCallFBF_06_35(object):
 		#=======================================================================
 
 		# 0: direct; 1: date; 2: Name; 3: Nummer; 4: Nebenstelle; 5: Eigene Rufnumme; 6: Dauer
-		calls = csv.reader(StringIO(csvString), delimiter = ';')
+		calls = csv.reader(StringIO(csvString), delimiter=';')
 		next(calls)  # skip sep
 		next(calls)  # skip header line
 
@@ -2958,7 +2969,7 @@ class FritzCallFBF_06_35(object):
 		@type number: string
 		'''
 		self.debug("")
-		Notifications.AddNotification(MessageBox, _("not available with this firmware version"), type = MessageBox.TYPE_ERROR, timeout = config.plugins.FritzCall.timeout.value)
+		Notifications.AddNotification(MessageBox, _("not available with this firmware version"), type=MessageBox.TYPE_ERROR, timeout=config.plugins.FritzCall.timeout.value)
 
 	def changeWLAN(self, statusWLAN, callback):
 		'''
@@ -2980,31 +2991,31 @@ class FritzCallFBF_06_35(object):
 	def _changeWLAN(self, statusWLAN, callback, md5Sid):
 		if statusWLAN == '0':
 			parms = urlencode({
-				'sid':md5Sid,
-				'apply':'',
-				'cancel':'',
-				'btn_refresh':''
+				'sid': md5Sid,
+				'apply': '',
+				'cancel': '',
+				'btn_refresh': ''
 				})
 		else:
 			parms = urlencode({
-				'sid':md5Sid,
-				'active':'on',
-				'active_24':'on',
-				'active_5':'on',
-				'hidden_ssid':'on',
-				'apply':'',
-				'cancel':'',
-				'btn_refresh':''
+				'sid': md5Sid,
+				'active': 'on',
+				'active_24': 'on',
+				'active_5': 'on',
+				'hidden_ssid': 'on',
+				'apply': '',
+				'cancel': '',
+				'btn_refresh': ''
 				})
 
 		url = "http://%s//wlan/wlan_settings.lua" % config.plugins.FritzCall.hostname.value
 		self.debug("url: " + url + "?" + parms)
 		getPage(url,
-			method = "POST",
-			agent = USERAGENT,
-			headers = {
+			method="POST",
+			agent=USERAGENT,
+			headers={
 					'Content-Type': "application/x-www-form-urlencoded"},
-			postdata = parms).addCallback(self._okChangeWLAN, callback, md5Sid).addErrback(self._errorChangeWLAN, md5Sid)
+			postdata=parms).addCallback(self._okChangeWLAN, callback, md5Sid).addErrback(self._errorChangeWLAN, md5Sid)
 
 	def _okChangeWLAN(self, html, callback, md5Sid):  # @UnusedVariable # pylint: disable=W0613
 		self.debug("")
@@ -3035,20 +3046,20 @@ class FritzCallFBF_06_35(object):
 
 	def _changeGuestAccessWLAN(self, statusGuestAccess, callback, md5Sid):
 		parms = {
-			'sid':md5Sid,
-			'autoupdate':'on',
-			'apply':'',
-			'oldpage':'/wlan/guest_access.lua',
+			'sid': md5Sid,
+			'autoupdate': 'on',
+			'apply': '',
+			'oldpage': '/wlan/guest_access.lua',
 			}
 
 		if statusGuestAccess.find('WLAN') != -1:
 			parms.update({
-				'print':'',
+				'print': '',
 				})
 		else:
 			parms.update({
-				'activate_guest_access':'on',
-				'guest_ssid':config.plugins.FritzCall.guestSSID.value,
+				'activate_guest_access': 'on',
+				'guest_ssid': config.plugins.FritzCall.guestSSID.value,
 				})
 			if config.plugins.FritzCall.guestUptime.value:
 				parms.update({
@@ -3058,23 +3069,23 @@ class FritzCallFBF_06_35(object):
 							})
 			if config.plugins.FritzCall.guestSecure.value:
 				parms.update({
-					'sec_mode':'3',
+					'sec_mode': '3',
 					'wpa_key': self.guestPassword,
 					})
 			else:
 				parms.update({
-					'sec_mode':'5',
+					'sec_mode': '5',
 					})
 		parms = urlencode(parms)
 
 		url = "http://%s/data.lua" % config.plugins.FritzCall.hostname.value
 		self.debug("url: " + url + "?" + parms)
 		getPage(url,
-			method = "POST",
-			agent = USERAGENT,
-			headers = {
+			method="POST",
+			agent=USERAGENT,
+			headers={
 					'Content-Type': "application/x-www-form-urlencoded"},
-			postdata = parms).addCallback(self._okChangeGuestAccess, callback, md5Sid).addErrback(self._errorChangeGuestAccess, md5Sid)
+			postdata=parms).addCallback(self._okChangeGuestAccess, callback, md5Sid).addErrback(self._errorChangeGuestAccess, md5Sid)
 
 	def _okChangeGuestAccess(self, html, callback, md5Sid):  # @UnusedVariable # pylint: disable=W0613
 		self.debug("")
@@ -3099,7 +3110,7 @@ class FritzCallFBF_06_35(object):
 		@type which: string
 		'''
 		self.debug("")
-		Notifications.AddNotification(MessageBox, _("not available with this firmware version"), type = MessageBox.TYPE_ERROR, timeout = config.plugins.FritzCall.timeout.value)
+		Notifications.AddNotification(MessageBox, _("not available with this firmware version"), type=MessageBox.TYPE_ERROR, timeout=config.plugins.FritzCall.timeout.value)
 
 	def getInfo(self, callback):
 		'''
@@ -3115,18 +3126,18 @@ class FritzCallFBF_06_35(object):
 
 		url = "http://%s/data.lua" % config.plugins.FritzCall.hostname.value
 		parms = urlencode({
-			'sid':md5Sid,
-			'page':'overview',
-			'type':'all'
+			'sid': md5Sid,
+			'page': 'overview',
+			'type': 'all'
 			})
 		self.debug("url: " + url + "?" + parms)
 		getPage(url,
-			method = "POST",
-			agent = USERAGENT,
-			headers = {
+			method="POST",
+			agent=USERAGENT,
+			headers={
 					'Content-Type': "application/x-www-form-urlencoded",
 					'Content-Length': str(len(parms))},
-			postdata = parms).addCallback(lambda x:self._okGetInfo(callback, x, md5Sid)).addErrback(self._errorGetInfo, md5Sid)
+			postdata=parms).addCallback(lambda x: self._okGetInfo(callback, x, md5Sid)).addErrback(self._errorGetInfo, md5Sid)
 
 	def _okGetInfo(self, callback, html, md5Sid):
 
@@ -3395,16 +3406,16 @@ class FritzCallFBF_06_35(object):
 
 		url = "http://%s/system/reboot.lua" % config.plugins.FritzCall.hostname.value
 		parms = urlencode({
-			'reboot':'',
-			'sid':md5Sid
+			'reboot': '',
+			'sid': md5Sid
 			})
 		self.debug("url: " + url + "?" + parms)
 		getPage(url,
-			method = "POST",
-			agent = USERAGENT,
-			headers = {
+			method="POST",
+			agent=USERAGENT,
+			headers={
 					'Content-Type': "application/x-www-form-urlencoded"},
-			postdata = parms).addCallback(self._okReset, md5Sid).addErrback(self._errorReset, md5Sid)
+			postdata=parms).addCallback(self._okReset, md5Sid).addErrback(self._errorReset, md5Sid)
 
 	def _okReset(self, html, md5Sid):  # @UnusedVariable # pylint: disable=W0613
 		self.debug("")
@@ -3430,17 +3441,17 @@ class FritzCallFBF_06_35(object):
 		# https://217.245.196.140:699/data.lua?xhr=1&sid=e8fcf4f9a9186070&lang=de&no_sidrenew=&page=callLock
 		url = "http://%s/data.lua" % config.plugins.FritzCall.hostname.value
 		parms = urlencode({
-			'sid':md5Sid,
-			'page':'callLock'
+			'sid': md5Sid,
+			'page': 'callLock'
 			})
 		self.debug("url: " + url + "?" + parms)
 		getPage(url,
-			method = "POST",
-			agent = USERAGENT,
-			headers = {
+			method="POST",
+			agent=USERAGENT,
+			headers={
 					'Content-Type': "application/x-www-form-urlencoded",
 					'Content-Length': str(len(parms))},
-			postdata = parms).addCallback(self._okBlacklist, md5Sid).addErrback(self._errorBlacklist, md5Sid)
+			postdata=parms).addCallback(self._okBlacklist, md5Sid).addErrback(self._errorBlacklist, md5Sid)
 
 	def _okBlacklist(self, html, md5Sid):
 		self.debug("")
@@ -3478,6 +3489,7 @@ class FritzCallFBF_06_35(object):
 
 
 TIMEOUT = 20
+
 
 class FritzCallFBF_upnp():
 	logger = logging.getLogger("FritzCall.FBF_upnp")
@@ -3517,7 +3529,7 @@ class FritzCallFBF_upnp():
 			self.debug("try to close callScreen")
 			self._callScreen.close()
 			self._callScreen = None
-		Notifications.AddNotification(MessageBox, text, type = MessageBox.TYPE_ERROR, timeout = config.plugins.FritzCall.timeout.value)
+		Notifications.AddNotification(MessageBox, text, type=MessageBox.TYPE_ERROR, timeout=config.plugins.FritzCall.timeout.value)
 
 	def getInfo(self, callback=None):
 		'''
@@ -3571,9 +3583,9 @@ class FritzCallFBF_upnp():
 
 		url = "http://%s/data.lua" % config.plugins.FritzCall.hostname.value
 		parms = urlencode({
-			'sid':md5Sid,
-			'page':'overview',
-			'type':'all'
+			'sid': md5Sid,
+			'page': 'overview',
+			'type': 'all'
 			})
 		self.debug("url: " + url + "?" + parms)
 
@@ -3584,10 +3596,10 @@ class FritzCallFBF_upnp():
 		for h in six.iterkeys(headers):
 			newheaders[six.ensure_binary(h)] = six.ensure_binary(headers[h])
 		getPage(six.ensure_binary(url),
-			method = six.ensure_binary("POST"),
-			agent = six.ensure_binary(USERAGENT),
-			headers = newheaders,
-			postdata = six.ensure_binary(parms)).addCallback(self._okGetInfo)
+			method=six.ensure_binary("POST"),
+			agent=six.ensure_binary(USERAGENT),
+			headers=newheaders,
+			postdata=six.ensure_binary(parms)).addCallback(self._okGetInfo)
 
 	def _okGetInfo(self, html):
 		self.debug("")
@@ -4003,7 +4015,7 @@ class FritzCallFBF_upnp():
 		if "X_AVM-DE_OnTel:1" in list(self.fc.services.keys()):
 			self.fc.call_action(lambda x: self._getCalls_cb1(x, callback), "X_AVM-DE_OnTel", "GetCallList")
 		else:
-			Notifications.AddNotification(MessageBox, _("Cannot get infos from FRITZ!Box yet\nStill initialising or wrong firmware version"), type = MessageBox.TYPE_ERROR, timeout = config.plugins.FritzCall.timeout.value)
+			Notifications.AddNotification(MessageBox, _("Cannot get infos from FRITZ!Box yet\nStill initialising or wrong firmware version"), type=MessageBox.TYPE_ERROR, timeout=config.plugins.FritzCall.timeout.value)
 
 	def _getCalls_cb1(self, result, callback):
 		self.debug("")
@@ -4238,7 +4250,7 @@ class FritzCallFBF_upnp():
 			return
 
 		if "WLANConfiguration:1" not in list(self.fc.services.keys()):
-			Notifications.AddNotification(MessageBox, _("Cannot get infos from FRITZ!Box yet\nStill initialising or wrong firmware version"), type = MessageBox.TYPE_ERROR, timeout = config.plugins.FritzCall.timeout.value)
+			Notifications.AddNotification(MessageBox, _("Cannot get infos from FRITZ!Box yet\nStill initialising or wrong firmware version"), type=MessageBox.TYPE_ERROR, timeout=config.plugins.FritzCall.timeout.value)
 			return
 
 		if "WLANConfiguration:3" in list(self.fc.services.keys()):
@@ -4258,7 +4270,7 @@ class FritzCallFBF_upnp():
 			self.debug("skip because of login failure")
 
 		if "WLANConfiguration:2" not in list(self.fc.services.keys()):
-			Notifications.AddNotification(MessageBox, _("Cannot get infos from FRITZ!Box yet\nStill initialising or wrong firmware version"), type = MessageBox.TYPE_ERROR, timeout = config.plugins.FritzCall.timeout.value)
+			Notifications.AddNotification(MessageBox, _("Cannot get infos from FRITZ!Box yet\nStill initialising or wrong firmware version"), type=MessageBox.TYPE_ERROR, timeout=config.plugins.FritzCall.timeout.value)
 			return
 
 		if statusGuestAccess.find('WLAN') != -1:
@@ -4299,7 +4311,7 @@ class FritzCallFBF_upnp():
 
 		self.blacklist = ([], [])
 		if "X_AVM-DE_OnTel:1" not in list(self.fc.services.keys()):
-			Notifications.AddNotification(MessageBox, _("Cannot get infos from FRITZ!Box yet\nStill initialising or wrong firmware version"), type = MessageBox.TYPE_ERROR, timeout = config.plugins.FritzCall.timeout.value)
+			Notifications.AddNotification(MessageBox, _("Cannot get infos from FRITZ!Box yet\nStill initialising or wrong firmware version"), type=MessageBox.TYPE_ERROR, timeout=config.plugins.FritzCall.timeout.value)
 			return
 		self.fc.call_action(self._readBlacklist_cb1, "X_AVM-DE_OnTel", "GetCallBarringList")
 
@@ -4471,7 +4483,7 @@ class FritzCallFBF_upnp():
 						else:
 							self.error("no phonebookId for blacklist? Strange")
 					else:
-						Notifications.AddNotification(MessageBox, _("Cannot get infos from FRITZ!Box yet\nStill initialising or wrong firmware version"), type = MessageBox.TYPE_ERROR, timeout = config.plugins.FritzCall.timeout.value)
+						Notifications.AddNotification(MessageBox, _("Cannot get infos from FRITZ!Box yet\nStill initialising or wrong firmware version"), type=MessageBox.TYPE_ERROR, timeout=config.plugins.FritzCall.timeout.value)
 
 		self.debug("blacklist: %s", repr(self.blacklist))
 
@@ -4483,7 +4495,7 @@ class FritzCallFBF_upnp():
 		@type number: string
 		'''
 		self.debug("")
-		Notifications.AddNotification(MessageBox, _("not yet implemented"), type = MessageBox.TYPE_ERROR, timeout = config.plugins.FritzCall.timeout.value)
+		Notifications.AddNotification(MessageBox, _("not yet implemented"), type=MessageBox.TYPE_ERROR, timeout=config.plugins.FritzCall.timeout.value)
 
 	def reset(self):
 		'''
@@ -4496,7 +4508,8 @@ class FritzCallFBF_upnp():
 		if "DeviceConfig:1" in list(self.fc.services.keys()):
 			self.fc.call_action(self._getInfo, "DeviceConfig", "Reboot")
 		else:
-			Notifications.AddNotification(MessageBox, _("Cannot get infos from FRITZ!Box yet\nStill initialising or wrong firmware version"), type = MessageBox.TYPE_ERROR, timeout = config.plugins.FritzCall.timeout.value)
+			Notifications.AddNotification(MessageBox, _("Cannot get infos from FRITZ!Box yet\nStill initialising or wrong firmware version"), type=MessageBox.TYPE_ERROR, timeout=config.plugins.FritzCall.timeout.value)
+
 
 class FritzCallFBF_dummy(object):
 	logger = logging.getLogger("FritzCall.FBF_dummy")
@@ -4531,14 +4544,14 @@ class FritzCallFBF_dummy(object):
 		@param which: direction of calls to be grabbed
 		'''
 		self.debug("")
-		Notifications.AddNotification(MessageBox, _("not yet implemented"), type = MessageBox.TYPE_ERROR, timeout = config.plugins.FritzCall.timeout.value)
+		Notifications.AddNotification(MessageBox, _("not yet implemented"), type=MessageBox.TYPE_ERROR, timeout=config.plugins.FritzCall.timeout.value)
 
-	def getInfo(self,callback):
+	def getInfo(self, callback):
 		'''
 		Retrieve information from box and fill in self.information and self.blacklist
 		'''
 		self.debug("")
-		Notifications.AddNotification(MessageBox, _("not yet implemented"), type = MessageBox.TYPE_ERROR, timeout = config.plugins.FritzCall.timeout.value)
+		Notifications.AddNotification(MessageBox, _("not yet implemented"), type=MessageBox.TYPE_ERROR, timeout=config.plugins.FritzCall.timeout.value)
 
 	def loadFritzBoxPhonebook(self, phonebook):   # @UnusedVariable # pylint: disable=W0613
 		'''
@@ -4548,7 +4561,7 @@ class FritzCallFBF_dummy(object):
 		@type phonebook: dictionary of number, information
 		'''
 		self.debug("")
-		Notifications.AddNotification(MessageBox, _("not yet implemented"), type = MessageBox.TYPE_ERROR, timeout = config.plugins.FritzCall.timeout.value)
+		Notifications.AddNotification(MessageBox, _("not yet implemented"), type=MessageBox.TYPE_ERROR, timeout=config.plugins.FritzCall.timeout.value)
 
 	def changeWLAN(self, state, callback):  # @UnusedVariable # pylint: disable=W0613
 		'''
@@ -4558,7 +4571,7 @@ class FritzCallFBF_dummy(object):
 		@type state: string
 		'''
 		self.debug("")
-		Notifications.AddNotification(MessageBox, _("not yet implemented"), type = MessageBox.TYPE_ERROR, timeout = config.plugins.FritzCall.timeout.value)
+		Notifications.AddNotification(MessageBox, _("not yet implemented"), type=MessageBox.TYPE_ERROR, timeout=config.plugins.FritzCall.timeout.value)
 
 	def changeGuestAccess(self, statusGuestAccess, callback):  # @UnusedVariable # pylint: disable=W0613
 		'''
@@ -4568,7 +4581,7 @@ class FritzCallFBF_dummy(object):
 		@type statusGuestAccess: string
 		'''
 		self.debug("")
-		Notifications.AddNotification(MessageBox, _("not yet implemented"), type = MessageBox.TYPE_ERROR, timeout = config.plugins.FritzCall.timeout.value)
+		Notifications.AddNotification(MessageBox, _("not yet implemented"), type=MessageBox.TYPE_ERROR, timeout=config.plugins.FritzCall.timeout.value)
 
 	def changeMailbox(self, which, callback):  # @UnusedVariable # pylint: disable=W0613
 		'''
@@ -4578,7 +4591,7 @@ class FritzCallFBF_dummy(object):
 		@type which: string
 		'''
 		self.debug("")
-		Notifications.AddNotification(MessageBox, _("not yet implemented"), type = MessageBox.TYPE_ERROR, timeout = config.plugins.FritzCall.timeout.value)
+		Notifications.AddNotification(MessageBox, _("not yet implemented"), type=MessageBox.TYPE_ERROR, timeout=config.plugins.FritzCall.timeout.value)
 
 	def dial(self, number):  # @UnusedVariable # pylint: disable=W0613
 		'''
@@ -4588,11 +4601,11 @@ class FritzCallFBF_dummy(object):
 		@type number: string
 		'''
 		self.debug("")
-		Notifications.AddNotification(MessageBox, _("not yet implemented"), type = MessageBox.TYPE_ERROR, timeout = config.plugins.FritzCall.timeout.value)
+		Notifications.AddNotification(MessageBox, _("not yet implemented"), type=MessageBox.TYPE_ERROR, timeout=config.plugins.FritzCall.timeout.value)
 
 	def reset(self):
 		'''
 		Reset box
 		'''
 		self.debug("")
-		Notifications.AddNotification(MessageBox, _("not yet implemented"), type = MessageBox.TYPE_ERROR, timeout = config.plugins.FritzCall.timeout.value)
+		Notifications.AddNotification(MessageBox, _("not yet implemented"), type=MessageBox.TYPE_ERROR, timeout=config.plugins.FritzCall.timeout.value)
