@@ -2,9 +2,9 @@
 '''
 Created on 30.09.2012
 $Author: michael $
-$Revision: 1626 $
-$Date: 2022-05-29 12:35:38 +0200 (Sun, 29 May 2022) $
-$Id: FritzCallFBF.py 1626 2022-05-29 10:35:38Z michael $
+$Revision: 1629 $
+$Date: 2022-12-04 16:15:39 +0100 (Sun, 04 Dec 2022) $
+$Id: FritzCallFBF.py 1629 2022-12-04 15:15:39Z michael $
 '''
 
 # C0111 (Missing docstring)
@@ -3694,18 +3694,19 @@ class FritzCallFBF_upnp():
 			if "connections" in boxData["internet"]:  # since 07.39
 				for connData in boxData["internet"]["connections"]:
 					self.debug("2")
-					if provider:
-						provider = provider + ", " + connData["provider"]
-					else:
-						provider = connData["provider"]
-					self.debug("3")
+					if "provider" in connData:
+						if provider:
+							provider = provider + ", " + connData["provider"]
+						else:
+							provider = connData["provider"]
+					self.debug("3: provider " + provider)
 					if "downstream" in connData and "upstream" in connData:
 						if internetSpeed:
 							internetSpeed = internetSpeed + ", " + str(connData["downstream"] / 1000) + " Mbit/s / " + str(connData["upstream"] / 1000) + " Mbit/s"
 						else:
 							internetSpeed = str(connData["downstream"] / 1000) + " Mbit/s / " + str(connData["upstream"] / 1000) + " Mbit/s"
-					self.debug("4")
-					if connData["ipv4"]["connected"]:
+					self.debug("4: internetSpeed " + internetSpeed)
+					if "ipv4" in connData and connData["ipv4"]["connected"]:
 						if upTime:
 							upTime = upTime + ", " + datetime.fromtimestamp(connData["ipv4"]["since"]).strftime('%d.%m.%Y, %H:%M')
 						else:
@@ -3714,8 +3715,8 @@ class FritzCallFBF_upnp():
 							ipAddress = ipAddress + ", " + connData["ipv4"]["ip"]
 						else:
 							ipAddress = connData["ipv4"]["ip"]
-					self.debug("5")
-					if connData["ipv6"]["connected"]:
+					self.debug("5 upTime " + upTime + " ipAddrss " + ipAddress)
+					if "ipv6" in connData and connData["ipv6"]["connected"]:
 						if upTime6:
 							upTime6 = upTime6 + ", " + datetime.fromtimestamp(connData["ipv6"]["since"]).strftime('%d.%m.%Y, %H:%M')
 						else:
