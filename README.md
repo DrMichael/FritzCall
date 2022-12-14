@@ -9,7 +9,7 @@ Das FritzCall-Plugin zeigt Anrufe, die auf einer FRITZ!Box Fon ankommen oder üb
 - Die Anzeige kann auf bestimmte eigene Nummern eingeschränkt werden
 - Es wird ein Anruferbild angezeigt, wenn ein entsprechendes Bild (PNG mit 256 Farben) mit dem Namen oder der Nummer des Anrufers im Verzeichnis <Lokation des Telefonbuchs>/FritzCallFaces existiert
 
-(*) Dazu muss an einem Telefon, dass direkt an der FRITZ!Box Fon angeschlossen ist, die Folge #96*5* eingeben und gewählt werden. Des weiteren muss "Zugriff für Anwendungen zulassen" in der FRITZ!Box aktiviert werden (Heimnetzübersicht/Netzwerkeinstellungen). Dokumentation und Screenshots finden sich hier.
+(*) Dazu muss an einem Telefon, dass direkt an der FRITZ!Box Fon angeschlossen ist, die Folge `#96*5*` eingeben und gewählt werden. Des weiteren muss "Zugriff für Anwendungen zulassen" in der FRITZ!Box aktiviert werden (Heimnetzübersicht/Netzwerkeinstellungen). Dokumentation und Screenshots finden sich hier.
 
 Die ipk-Datei installiert man auf der Box mit ```opkg install <Dateiname>```.
 Unter Umständen muss man vorher noch die existierende Installation entfernen mit ```opkg remove enigma2-plugin-extensions-fritzcall```.
