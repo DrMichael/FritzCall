@@ -2,9 +2,9 @@
 '''
 Update rev
 $Author: michael $
-$Revision: 1629 $
-$Date: 2022-12-04 16:15:39 +0100 (Sun, 04 Dec 2022) $
-$Id: plugin.py 1629 2022-12-04 15:15:39Z michael $
+$Revision: 1631 $
+$Date: 2022-12-15 11:54:42 +0100 (Thu, 15 Dec 2022) $
+$Id: plugin.py 1631 2022-12-15 10:54:42Z michael $
 '''
 
 # C0111 (Missing docstring)
@@ -19,7 +19,6 @@ $Id: plugin.py 1629 2022-12-04 15:15:39Z michael $
 # E401 multiple imports on one line
 # E501 line too long (85 > 79 characters)
 # pylint: disable=C0111,C0103,C0301,W0603,C0302
-
 
 from __future__ import division, absolute_import
 import re
@@ -387,8 +386,8 @@ class FritzAbout(Screen):
 		self["text"] = Label(
 							"FritzCall Plugin" + "\n\n" +
 							"$Author: michael $"[1:-2] + "\n" +
-							"$Revision: 1629 $"[1:-2] + "\n" +
-							"$Date: 2022-12-04 16:15:39 +0100 (Sun, 04 Dec 2022) $"[1:23] + "\n"
+							"$Revision: 1631 $"[1:-2] + "\n" +
+							"$Date: 2022-12-15 11:54:42 +0100 (Thu, 15 Dec 2022) $"[1:23] + "\n"
 							)
 		self["url"] = Label("http://wiki.blue-panel.com/index.php/FritzCall")
 		self.onLayoutFinish.append(self.setWindowTitle)
@@ -2169,7 +2168,7 @@ class FritzCallSetup(Screen, ConfigListScreen, HelpableScreen):
 
 	def setWindowTitle(self):
 		# TRANSLATORS: this is a window title.
-		self.setTitle(_("FritzCall Setup") + " (" + "$Revision: 1629 $"[1:-1] + "$Date: 2022-12-04 16:15:39 +0100 (Sun, 04 Dec 2022) $"[7:23] + ")")
+		self.setTitle(_("FritzCall Setup") + " (" + "$Revision: 1631 $"[1:-1] + "$Date: 2022-12-15 11:54:42 +0100 (Thu, 15 Dec 2022) $"[7:23] + ")")
 
 	def keyLeft(self):
 		ConfigListScreen.keyLeft(self)
@@ -2743,7 +2742,7 @@ class FritzReverseLookupAndNotifier(object):
 
 class FritzProtocol(LineReceiver):  # pylint: disable=W0223
 	def __init__(self):
-		info("[FritzProtocol] %s%s starting", "$Revision: 1629 $"[1:-1], "$Date: 2022-12-04 16:15:39 +0100 (Sun, 04 Dec 2022) $"[7:23])
+		info("[FritzProtocol] %s%s starting", "$Revision: 1631 $"[1:-1], "$Date: 2022-12-15 11:54:42 +0100 (Thu, 15 Dec 2022) $"[7:23])
 		global mutedOnConnID
 		mutedOnConnID = None
 		self.number = '0'

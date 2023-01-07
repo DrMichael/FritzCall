@@ -278,7 +278,8 @@ class FritzAction(object):
 					# raised in case that value is None. Should also not happen.
 					value = None
 			result[argument.name] = value
-		callback(result)
+		if callback:
+			callback(result)
 
 
 class FritzActionArgument(object):
