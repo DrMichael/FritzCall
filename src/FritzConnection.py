@@ -38,7 +38,7 @@ import logging
 import re
 import six
 from hashlib import md5
-from twisted.web.client import getPage
+from . import getPage
 import xml.etree.ElementTree as ET
 
 from Components.config import config
@@ -187,7 +187,7 @@ class FritzAction(object):
 
 	def _okExecute(self, content, callback, **kwargs):
 		# self.debug("")
-		content = six.ensure_text(content)
+		content = six.ensure_text(content.content)
 		if self.logger.getEffectiveLevel() == logging.DEBUG:
 			linkP = open("/tmp/FritzCall_okExecute.xml", "w")
 			linkP.write(content)
@@ -245,7 +245,7 @@ class FritzAction(object):
 		TODO: boolean and signed integers data-types from tr64 responses
 		"""
 		# self.debug("")
-		response = six.ensure_text(response)
+		response = six.ensure_text(response.content)
 		if self.logger.getEffectiveLevel() == logging.DEBUG:
 			linkP = open("/tmp/FritzCall_parse_response.xml", "w")
 			linkP.write(response)
@@ -348,7 +348,7 @@ class FritzXmlParser(object):
 
 	def _okInit(self, source):
 		# self.debug("")
-		self.root = ET.fromstring(source)
+		self.root = ET.fromstring(source.content)
 		self.namespace = namespace(self.root)
 		if self.service:
 			self.callback(self.service, self)
