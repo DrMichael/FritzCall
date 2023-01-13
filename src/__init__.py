@@ -2,10 +2,10 @@
 '''
 general functions for FritzCall plugin
 
-$Id: __init__.py 1639 2023-01-11 11:21:40Z michael $
+$Id: __init__.py 1640 2023-01-13 15:56:29Z michael $
 $Author: michael $
-$Revision: 1639 $
-$Date: 2023-01-11 12:21:40 +0100 (Wed, 11 Jan 2023) $
+$Revision: 1640 $
+$Date: 2023-01-13 16:56:29 +0100 (Fri, 13 Jan 2023) $
 '''
 
 from __future__ import division
@@ -38,7 +38,7 @@ import requests
 USERAGENT = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36"
 def getPage(url, agent=USERAGENT, method="GET", postdata=None, headers={}):
 	# debug(repr(method))
-	# headers["user-agent"] = agent
+	headers["user-agent"] = agent
 	# debug("params: " + repr(postdata))
 	if method == "POST" or method == b"POST":
 		return deferToThread(requests.post, url, data=postdata, headers=headers, timeout=30.05, verify=False)
