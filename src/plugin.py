@@ -2,9 +2,9 @@
 '''
 Update rev
 $Author: michael $
-$Revision: 1639 $
-$Date: 2023-01-11 12:21:40 +0100 (Wed, 11 Jan 2023) $
-$Id: plugin.py 1639 2023-01-11 11:21:40Z michael $
+$Revision: 1642 $
+$Date: 2023-02-04 11:31:28 +0100 (Sat, 04 Feb 2023) $
+$Id: plugin.py 1642 2023-02-04 10:31:28Z michael $
 '''
 
 
@@ -28,14 +28,12 @@ import os
 import traceback
 import json
 import base64
-import six
 import logging
 import binascii
 import locale
 from itertools import cycle
 from logging import NOTSET, DEBUG, INFO, WARNING, ERROR, CRITICAL
 from xml.dom.minidom import parse
-from six.moves import zip, range
 
 from enigma import getDesktop
 from Screens.Screen import Screen
@@ -46,10 +44,7 @@ from Screens import Standby
 from Screens.HelpMenu import HelpableScreen
 from Screens.LocationBox import LocationBox
 
-from enigma import eTimer, eSize  # @UnresolvedImport # pylint: disable=E0611
-from enigma import eDVBVolumecontrol, eConsoleAppContainer  # @UnresolvedImport # pylint: disable=E0611
-# BgFileEraser = eBackgroundFileEraser.getInstance()
-# BgFileEraser.erase("blabla.txt")
+from enigma import eTimer, eSize, eDVBVolumecontrol, eConsoleAppContainer  # @UnresolvedImport # pylint: disable=E0611
 
 from Components.ActionMap import ActionMap
 from Components.Label import Label
@@ -66,11 +61,14 @@ from Tools.NumericalTextInput import NumericalTextInput
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS, SCOPE_CONFIG, SCOPE_CURRENT_SKIN, \
 	SCOPE_CURRENT_PLUGIN
 from Tools.LoadPixmap import LoadPixmap
-from GlobalActions import globalActionMap  # for muting
+from GlobalActions import globalActionMap
 
-from twisted.internet import reactor  # @UnresolvedImport
-from twisted.internet.protocol import ReconnectingClientFactory  # @UnresolvedImport
-from twisted.protocols.basic import LineReceiver  # @UnresolvedImport
+from twisted.internet import reactor
+from twisted.internet.protocol import ReconnectingClientFactory
+from twisted.protocols.basic import LineReceiver
+
+import six
+from six.moves import zip, range
 
 from .nrzuname import ReverseLookupAndNotifier  # @UnresolvedImport
 from . import __  # @UnresolvedImport # pylint: disable=W0611,F0401
@@ -387,8 +385,8 @@ class FritzAbout(Screen):
 		self["text"] = Label(
 							"FritzCall Plugin" + "\n\n" +
 							"$Author: michael $"[1:-2] + "\n" +
-							"$Revision: 1639 $"[1:-2] + "\n" +
-							"$Date: 2023-01-11 12:21:40 +0100 (Wed, 11 Jan 2023) $"[1:23] + "\n"
+							"$Revision: 1642 $"[1:-2] + "\n" +
+							"$Date: 2023-02-04 11:31:28 +0100 (Sat, 04 Feb 2023) $"[1:23] + "\n"
 							)
 		self["url"] = Label("http://wiki.blue-panel.com/index.php/FritzCall")
 		self.onLayoutFinish.append(self.setWindowTitle)
@@ -2169,7 +2167,7 @@ class FritzCallSetup(Screen, ConfigListScreen, HelpableScreen):
 
 	def setWindowTitle(self):
 		# TRANSLATORS: this is a window title.
-		self.setTitle(_("FritzCall Setup") + " (" + "$Revision: 1639 $"[1:-1] + "$Date: 2023-01-11 12:21:40 +0100 (Wed, 11 Jan 2023) $"[7:23] + ")")
+		self.setTitle(_("FritzCall Setup") + " (" + "$Revision: 1642 $"[1:-1] + "$Date: 2023-02-04 11:31:28 +0100 (Sat, 04 Feb 2023) $"[7:23] + ")")
 
 	def keyLeft(self):
 		ConfigListScreen.keyLeft(self)
@@ -2743,7 +2741,7 @@ class FritzReverseLookupAndNotifier(object):
 
 class FritzProtocol(LineReceiver):  # pylint: disable=W0223
 	def __init__(self):
-		info("[FritzProtocol] %s%s starting", "$Revision: 1639 $"[1:-1], "$Date: 2023-01-11 12:21:40 +0100 (Wed, 11 Jan 2023) $"[7:23])
+		info("[FritzProtocol] %s%s starting", "$Revision: 1642 $"[1:-1], "$Date: 2023-02-04 11:31:28 +0100 (Sat, 04 Feb 2023) $"[7:23])
 		global mutedOnConnID
 		mutedOnConnID = None
 		self.number = '0'
