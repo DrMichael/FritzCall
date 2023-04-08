@@ -2,9 +2,9 @@
 '''
 Created on 30.09.2012
 $Author: michael $
-$Revision: 1639 $
-$Date: 2023-01-11 12:21:40 +0100 (Wed, 11 Jan 2023) $
-$Id: FritzCallFBF.py 1639 2023-01-11 11:21:40Z michael $
+$Revision: 1642 $
+$Date: 2023-02-04 11:31:28 +0100 (Sat, 04 Feb 2023) $
+$Id: FritzCallFBF.py 1642 2023-02-04 10:31:28Z michael $
 '''
 
 # C0111 (Missing docstring)
@@ -21,27 +21,29 @@ $Id: FritzCallFBF.py 1639 2023-01-11 11:21:40Z michael $
 # E0611 No name %r in module %r
 # W1201 logging-not-lazy
 # pylint: disable=C0111,C0103,C0301,W0603,C0302,W0611,F0401,E0611,W1201
+
 from __future__ import absolute_import
 import re
 import logging
 import json
-import six
+import time
+import hashlib
+import csv
+from io import StringIO
+from datetime import datetime
 import xml.etree.ElementTree as ET
+
 from twisted.python.failure import Failure
-from six.moves.urllib.parse import urlencode
 
 from Tools import Notifications
 from Screens.MessageBox import MessageBox
 from enigma import eTimer  # @UnresolvedImport
 
-# from twisted.web.client import getPage  # deprecated
+import six
+from six.moves.urllib.parse import urlencode
+
 from . import __, getPage  # @UnresolvedImport # pylint: disable=W0611,F0401
-from datetime import datetime
-import time
-import hashlib
 from .nrzuname import html2unicode  # @UnresolvedImport
-import csv
-from io import StringIO
 try:
 	from enigma import eMediaDatabase  # @UnresolvedImport @UnusedImport
 except ImportError as ie:
