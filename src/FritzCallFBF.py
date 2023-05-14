@@ -4324,7 +4324,7 @@ class FritzCallFBF_upnp():
 			Notifications.AddNotification(MessageBox, _("Cannot get infos from FRITZ!Box yet\nStill initialising or wrong firmware version"), type=MessageBox.TYPE_ERROR, timeout=config.plugins.FritzCall.timeout.value)
 			return
 
-		if statusGuestAccess.find('WLAN') != -1:
+		if statusGuestAccess.find('WLAN') != -1 or statusGuestAccess.find('WIFI') != -1 or statusGuestAccess.find('Wi-Fi') != -1:
 			self.debug("WLAN")
 			if "WLANConfiguration:3" in list(self.fc.services.keys()):
 				self.fc.call_action(lambda x: self._general_cb(x, callback), "WLANConfiguration:3", "SetEnable", NewEnable=0)
