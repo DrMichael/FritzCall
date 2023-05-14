@@ -1031,7 +1031,7 @@ class FritzMenu(Screen, HelpableScreen):
 
 			if guestAccess is not None:
 				guestAccess = six.ensure_str(guestAccess)
-				if (guestAccess.find('WLAN') != -1 or guestAccess.find('WIFI') != -1):
+				if (guestAccess.find('WLAN') != -1 or guestAccess.find('WIFI') != -1 or guestAccess.find('Wi-Fi') != -1):
 					# TRANSLATORS: keep it short, this is a button
 					self["key_yellow"].setText(_("Deactivate WLAN guest access"))
 				else:
