@@ -4,7 +4,7 @@ Created on 30.09.2012
 $Author: michael $
 $Revision: 1647 $
 $Date: 2023-08-12 12:10:38 +0200 (Sa., 12 Aug. 2023) $
-$Id: FritzCallFBF.py 1651 2023-10-21 09:59:59Z michael $
+$Id: FritzCallFBF.py 1652 2023-10-21 13:37:57Z michael $
 '''
 
 # C0111 (Missing docstring)
@@ -4324,7 +4324,7 @@ class FritzCallFBF_upnp():
 			Notifications.AddNotification(MessageBox, _("Cannot get infos from FRITZ!Box yet\nStill initialising or wrong firmware version"), type=MessageBox.TYPE_ERROR, timeout=config.plugins.FritzCall.timeout.value)
 			return
 
-		if statusGuestAccess.find('WLAN') != -1 or guestAccess.find('Funknetz') != -1:
+		if statusGuestAccess.find('WLAN') != -1 or statusGuestAccess.find('Funknetz') != -1:
 			self.debug("WLAN")
 			if "WLANConfiguration:3" in list(self.fc.services.keys()):
 				self.fc.call_action(lambda x: self._general_cb(x, callback), "WLANConfiguration:3", "SetEnable", NewEnable=0)
