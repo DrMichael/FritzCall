@@ -2,9 +2,9 @@
 '''
 Created on 30.09.2012
 $Author: michael $
-$Revision: 1642 $
-$Date: 2023-02-04 11:31:28 +0100 (Sat, 04 Feb 2023) $
-$Id: FritzCallFBF.py 1642 2023-02-04 10:31:28Z michael $
+$Revision: 1647 $
+$Date: 2023-08-12 12:10:38 +0200 (Sa., 12 Aug. 2023) $
+$Id: FritzCallFBF.py 1651 2023-10-21 09:59:59Z michael $
 '''
 
 # C0111 (Missing docstring)
@@ -20,7 +20,7 @@ $Id: FritzCallFBF.py 1642 2023-02-04 10:31:28Z michael $
 # C0410 multiple-imports
 # E0611 No name %r in module %r
 # W1201 logging-not-lazy
-# pylint: disable=C0111,C0103,C0301,W0603,C0302,W0611,F0401,E0611,W1201
+# pylint: disable=C0111,C0103,C0301,W0603,C0302,W0611,F0401,E0611,W1201,syntax-error,no-name-in-module,ungrouped-imports,consider-using-f-string,unspecified-encoding,used-before-assignment
 
 from __future__ import absolute_import
 import re
@@ -4324,7 +4324,7 @@ class FritzCallFBF_upnp():
 			Notifications.AddNotification(MessageBox, _("Cannot get infos from FRITZ!Box yet\nStill initialising or wrong firmware version"), type=MessageBox.TYPE_ERROR, timeout=config.plugins.FritzCall.timeout.value)
 			return
 
-		if statusGuestAccess.find('WLAN') != -1 or statusGuestAccess.find('WIFI') != -1 or statusGuestAccess.find('Wi-Fi') != -1:
+		if statusGuestAccess.find('WLAN') != -1 or guestAccess.find('Funknetz') != -1:
 			self.debug("WLAN")
 			if "WLANConfiguration:3" in list(self.fc.services.keys()):
 				self.fc.call_action(lambda x: self._general_cb(x, callback), "WLANConfiguration:3", "SetEnable", NewEnable=0)

@@ -2,9 +2,9 @@
 '''
 Update rev
 $Author: michael $
-$Revision: 1642 $
-$Date: 2023-02-04 11:31:28 +0100 (Sat, 04 Feb 2023) $
-$Id: plugin.py 1642 2023-02-04 10:31:28Z michael $
+$Revision: 1647 $
+$Date: 2023-08-12 12:10:38 +0200 (Sa., 12 Aug. 2023) $
+$Id: plugin.py 1651 2023-10-21 09:59:59Z michael $
 '''
 
 
@@ -19,7 +19,7 @@ $Id: plugin.py 1642 2023-02-04 10:31:28Z michael $
 # C0302 too-many-lines
 # E401 multiple imports on one line
 # E501 line too long (85 > 79 characters)
-# pylint: disable=C0111,C0103,C0301,W0603,C0302
+# pylint: disable=C0111,C0103,C0301,W0603,C0302,syntax-error,no-name-in-module,ungrouped-imports,consider-using-f-string,unspecified-encoding,used-before-assignment
 
 from __future__ import division, absolute_import
 import re
@@ -385,8 +385,8 @@ class FritzAbout(Screen):
 		self["text"] = Label(
 							"FritzCall Plugin" + "\n\n" +
 							"$Author: michael $"[1:-2] + "\n" +
-							"$Revision: 1642 $"[1:-2] + "\n" +
-							"$Date: 2023-02-04 11:31:28 +0100 (Sat, 04 Feb 2023) $"[1:23] + "\n"
+							"$Revision: 1647 $"[1:-2] + "\n" +
+							"$Date: 2023-08-12 12:10:38 +0200 (Sa., 12 Aug. 2023) $"[1:23] + "\n"
 							)
 		self["url"] = Label("http://wiki.blue-panel.com/index.php/FritzCall")
 		self.onLayoutFinish.append(self.setWindowTitle)
@@ -884,7 +884,7 @@ class FritzMenu(Screen, HelpableScreen):
 	def _fillMenu(self, status, refreshing=False):
 		(boxInfo, upTime, ipAddress, wlanState, dslState, tamActive, dectActive, faxActive, rufumlActive, guestAccess) = status
 		if wlanState:
-			self._wlanActive = (wlanState[0] == '1')
+			self._wlanActive = wlanState[0] == '1'
 		self._guestActive = guestAccess
 		self._mailboxActive = False
 		try:
@@ -1031,7 +1031,7 @@ class FritzMenu(Screen, HelpableScreen):
 
 			if guestAccess is not None:
 				guestAccess = six.ensure_str(guestAccess)
-				if (guestAccess.find('WLAN') != -1 or guestAccess.find('WIFI') != -1 or guestAccess.find('Wi-Fi') != -1):
+				if (guestAccess.find('WLAN') != -1 or guestAccess.find('WIFI') != -1 or guestAccess.find('Funknetz') != -1):
 					# TRANSLATORS: keep it short, this is a button
 					self["key_yellow"].setText(_("Deactivate WLAN guest access"))
 				else:
@@ -2167,7 +2167,7 @@ class FritzCallSetup(Screen, ConfigListScreen, HelpableScreen):
 
 	def setWindowTitle(self):
 		# TRANSLATORS: this is a window title.
-		self.setTitle(_("FritzCall Setup") + " (" + "$Revision: 1642 $"[1:-1] + "$Date: 2023-02-04 11:31:28 +0100 (Sat, 04 Feb 2023) $"[7:23] + ")")
+		self.setTitle(_("FritzCall Setup") + " (" + "$Revision: 1647 $"[1:-1] + "$Date: 2023-08-12 12:10:38 +0200 (Sa., 12 Aug. 2023) $"[7:23] + ")")
 
 	def keyLeft(self):
 		ConfigListScreen.keyLeft(self)
@@ -2741,7 +2741,7 @@ class FritzReverseLookupAndNotifier(object):
 
 class FritzProtocol(LineReceiver):  # pylint: disable=W0223
 	def __init__(self):
-		info("[FritzProtocol] %s%s starting", "$Revision: 1642 $"[1:-1], "$Date: 2023-02-04 11:31:28 +0100 (Sat, 04 Feb 2023) $"[7:23])
+		info("[FritzProtocol] %s%s starting", "$Revision: 1647 $"[1:-1], "$Date: 2023-08-12 12:10:38 +0200 (Sa., 12 Aug. 2023) $"[7:23])
 		global mutedOnConnID
 		mutedOnConnID = None
 		self.number = '0'
