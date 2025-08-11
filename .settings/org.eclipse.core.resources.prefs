@@ -1,5 +1,6 @@
 eclipse.preferences.version=1
 encoding//src/FritzCallFBF.py=utf-8
 encoding//src/FritzConnection.py=utf-8
+encoding//src/__init__.py=utf-8
 encoding//src/plugin.py=utf-8
 encoding/<project>=UTF-8

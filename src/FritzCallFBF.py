@@ -1,26 +1,33 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*- # pylint: disable=too-many-lines
 '''
 Created on 30.09.2012
 $Author: michael $
-$Revision: 1647 $
-$Date: 2023-08-12 12:10:38 +0200 (Sa., 12 Aug. 2023) $
-$Id: FritzCallFBF.py 1652 2023-10-21 13:37:57Z michael $
+$Revision: 1657 $
+$Date: 2025-08-10 15:43:32 +0200 (So., 10 Aug. 2025) $
+$Id: FritzCallFBF.py 1657 2025-08-10 13:43:32Z michael $
 '''
 
-# C0111 (Missing docstring)
-# C0103 (Invalid name)
-# C0301 (line too long)
-# W0603 (global statement)
-# W0141 (map, filter, etc.)
-# W0110 lambda with map,filter
-# W0403 Relative import
-# W1401 Anomalous backslash in string
-# W0110 deprecated-lambda
-# C0302 too-many-lines
-# C0410 multiple-imports
-# E0611 No name %r in module %r
-# W1201 logging-not-lazy
-# pylint: disable=C0111,C0103,C0301,W0603,C0302,W0611,F0401,E0611,W1201,syntax-error,no-name-in-module,ungrouped-imports,consider-using-f-string,unspecified-encoding,used-before-assignment
+# missing-docstring / C0111
+# invalid-name / C0103
+# consider-iterating-dictionary / C0201
+# consider-using-f-string / C0209
+# line-too-long / C0301
+# too-many-lines / C0302
+# multiple-imports / C0410
+# ungrouped-imports / C0412
+# bad-builtin / W0141
+# deprecated-lambda / W0110
+# abstract-method / W0223
+# Relative import / W0403
+# global-statement / W0603
+# unused-argument / W0613
+# logging-not-lazy / W1201
+# logging-format-interpolation / W1202
+# anomalous-backslash-in-string / W1401
+# unspecified-encoding / W1514
+# no-name-in-module / E0611
+# no-member / E1101
+# pylint: disable=c0103,c0111,c0201,c0209,C0301,c0412,w0613,w1201,w1514
 
 from __future__ import absolute_import
 import re
@@ -97,7 +104,7 @@ def resolveNumber(number, default=None, phonebook=None, debug=logging.debug):
 			if name:
 				number = number + ' ' + name
 	elif number == "":
-		number = _("UNKNOWN")
+		number = _("UNKNOWN") # pylint: disable=used-before-assignment
 	# if len(number) > 20: number = number[:20]
 	return number
 
@@ -3638,17 +3645,7 @@ class FritzCallFBF_upnp():
 			})
 		self.debug("url: " + url + "?" + parms)
 
-		headers = {
-			'Content-Type': "application/x-www-form-urlencoded",
-			'Content-Length': str(len(parms))}
-		newheaders = {}
-		for h in six.iterkeys(headers):
-			newheaders[six.ensure_binary(h)] = six.ensure_binary(headers[h])
-		getPage(six.ensure_binary(url),
-			method=six.ensure_binary("POST"),
-			# agent=six.ensure_binary(USERAGENT),
-			headers=newheaders,
-			postdata=six.ensure_binary(parms)).addBoth(self._okGetInfo)
+		getPage(six.ensure_binary(url + "?" + parms), method="GET").addBoth(self._okGetInfo)
 
 	def _okGetInfo(self, result):
 		self.debug("")
