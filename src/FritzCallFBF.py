@@ -2,9 +2,9 @@
 '''
 Created on 30.09.2012
 $Author: michael $
-$Revision: 1657 $
-$Date: 2025-08-10 15:43:32 +0200 (So., 10 Aug. 2025) $
-$Id: FritzCallFBF.py 1657 2025-08-10 13:43:32Z michael $
+$Revision: 1659 $
+$Date: 2025-08-13 09:45:35 +0200 (Mi., 13 Aug. 2025) $
+$Id: FritzCallFBF.py 1659 2025-08-13 07:45:35Z michael $
 '''
 
 # missing-docstring / C0111
@@ -3751,7 +3751,7 @@ class FritzCallFBF_upnp():
 						if internetSpeed:
 							internetSpeed = internetSpeed + ", " + str(connData["downstream"] / 1000) + " / " + str(connData["upstream"] / 1000) + " Mbit/s"
 						else:
-							internetSpeed = str(connData["downstream"] / 1000) + " Mbit/s / " + str(connData["upstream"] / 1000) + " Mbit/s"
+							internetSpeed = str(connData["downstream"] / 1000) + " " + str(connData["upstream"] / 1000) + " Mbit/s"
 					self.debug("4: internetSpeed " + internetSpeed)
 					if "ipv4" in connData and connData["ipv4"]["connected"]:
 						if upTime:
