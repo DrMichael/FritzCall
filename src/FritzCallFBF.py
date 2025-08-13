@@ -2,9 +2,9 @@
 '''
 Created on 30.09.2012
 $Author: michael $
-$Revision: 1659 $
-$Date: 2025-08-13 09:45:35 +0200 (Mi., 13 Aug. 2025) $
-$Id: FritzCallFBF.py 1659 2025-08-13 07:45:35Z michael $
+$Revision: 1660 $
+$Date: 2025-08-13 09:51:21 +0200 (Mi., 13 Aug. 2025) $
+$Id: FritzCallFBF.py 1660 2025-08-13 07:51:21Z michael $
 '''
 
 # missing-docstring / C0111
@@ -3878,6 +3878,7 @@ class FritzCallFBF_upnp():
 				connData = boxData["cable"]
 			else:
 				connData = boxData["docsis"]
+			connData = connData + ":"
 			if connData["led"] == "led_green":
 				dslState = ['5', None, None]
 				dslState[1] = connData["down"] + " / " + connData["up"]
