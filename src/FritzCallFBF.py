@@ -2,9 +2,9 @@
 '''
 Created on 30.09.2012
 $Author: michael $
-$Revision: 1660 $
-$Date: 2025-08-13 09:51:21 +0200 (Mi., 13 Aug. 2025) $
-$Id: FritzCallFBF.py 1660 2025-08-13 07:51:21Z michael $
+$Revision: 1662 $
+$Date: 2025-09-01 12:08:46 +0200 (Mo., 01 Sept. 2025) $
+$Id: FritzCallFBF.py 1662 2025-09-01 10:08:46Z michael $
 '''
 
 # missing-docstring / C0111
@@ -3751,7 +3751,7 @@ class FritzCallFBF_upnp():
 						if internetSpeed:
 							internetSpeed = internetSpeed + ", " + str(connData["downstream"] / 1000) + " / " + str(connData["upstream"] / 1000) + " Mbit/s"
 						else:
-							internetSpeed = str(connData["downstream"] / 1000) + " " + str(connData["upstream"] / 1000) + " Mbit/s"
+							internetSpeed = str(connData["downstream"] / 1000) + " / " + str(connData["upstream"] / 1000) + " Mbit/s"
 					self.debug("4: internetSpeed " + internetSpeed)
 					if "ipv4" in connData and connData["ipv4"]["connected"]:
 						if upTime:
@@ -3878,7 +3878,7 @@ class FritzCallFBF_upnp():
 				connData = boxData["cable"]
 			else:
 				connData = boxData["docsis"]
-			connData = connData + ":"
+			# connData = connData + ":"
 			if connData["led"] == "led_green":
 				dslState = ['5', None, None]
 				dslState[1] = connData["down"] + " / " + connData["up"]
