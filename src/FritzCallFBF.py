@@ -2,9 +2,9 @@
 '''
 Created on 30.09.2012
 $Author: michael $
-$Revision: 1662 $
-$Date: 2025-09-01 12:08:46 +0200 (Mo., 01 Sept. 2025) $
-$Id: FritzCallFBF.py 1662 2025-09-01 10:08:46Z michael $
+$Revision: 1664 $
+$Date: 2025-09-24 16:29:22 +0200 (Mi., 24 Sept. 2025) $
+$Id: FritzCallFBF.py 1664 2025-09-24 14:29:22Z michael $
 '''
 
 # missing-docstring / C0111
@@ -3870,15 +3870,16 @@ class FritzCallFBF_upnp():
 		self.info("ipAddress final: " + repr(ipAddress))
 
 		if "dsl" in boxData or "docsis" in boxData or "cable" in boxData or "fiber" in boxData:
-			if "fiber" in boxData:
+			if "fiber" in boxData and boxData["fiber"]["led"] == "led green":
 				connData = boxData["fiber"]
-			elif "dsl" in boxData:
+			elif "dsl" in boxData and boxData["dsl"]["led"] == "led green":
 				connData = boxData["dsl"]
-			elif "cable" in boxData:
+			elif "cable" in boxData and boxData["cable"]["led"] == "led green":
 				connData = boxData["cable"]
 			else:
 				connData = boxData["docsis"]
 			# connData = connData + ":"
+			# self.debug("connData: " + repr(connData))
 			if connData["led"] == "led_green":
 				dslState = ['5', None, None]
 				dslState[1] = connData["down"] + " / " + connData["up"]
@@ -4316,7 +4317,7 @@ class FritzCallFBF_upnp():
 		@param statusGuestAccess: 'WLAN', 'WLAN, LAN' or 'LAN'
 		@type statusGuestAccess: string
 		'''
-		self.debug("")
+		self.debug(statusGuestAccess)
 		if self._loginFailure:
 			self.debug("skip because of login failure")
 
