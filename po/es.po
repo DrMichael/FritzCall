@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma 2-plugins\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-20 10:41+0100\n"
+"POT-Creation-Date: 2025-10-22 10:10+0200\n"
 "PO-Revision-Date: 2018-02-20 10:46+0100\n"
 "Last-Translator: José Juan Zapater <josej@zapater.fdns.net>\n"
 "Language-Team: none\n"
@@ -127,6 +127,16 @@ msgstr ""
 msgid "Could not get call list; wrong version?"
 msgstr ""
 
+msgid "Could not load barring list: "
+msgstr ""
+
+#, python-format
+msgid "Could not load barring list: %s"
+msgstr ""
+
+msgid "Could not load deflections list: "
+msgstr ""
+
 msgid "Could not load phonebook: "
 msgstr ""
 
@@ -204,6 +214,9 @@ msgstr ""
 "\n"
 "%(name)s?"
 
+msgid "Do you really want to reboot your Fritz!Box?"
+msgstr ""
+
 #. TRANSLATORS: keep it short, this is a button
 msgid "Edit"
 msgstr "Editar"
@@ -212,9 +225,6 @@ msgstr "Editar"
 #. TRANSLATORS: this is a window title.
 msgid "Edit selected entry"
 msgstr "Editar entrada seleccionada"
-
-msgid "Enter Search Terms"
-msgstr "Introduzca Términos de Búsqueda"
 
 msgid "Entry incomplete."
 msgstr "Entrada incompleta."
@@ -387,9 +397,6 @@ msgstr "MSN a mostrar (separado por ,)"
 msgid "Mailbox"
 msgstr "Carpeta de correo"
 
-msgid "Make it more skin friendly"
-msgstr ""
-
 #. TRANSLATORS: keep it short, this is a button
 msgid "Missed"
 msgstr "Perdidas"
@@ -427,12 +434,6 @@ msgstr "No cuenta de correo activa"
 
 msgid "No phonebook"
 msgstr ""
-
-msgid "No result from LDIF"
-msgstr "No hay resultado desde LDIF"
-
-msgid "No result from Outlook export"
-msgstr "No hay resultado desde la exportación de Outlook"
 
 msgid "No result from reverse lookup"
 msgstr "No hay resultado de resolución inversa"
@@ -539,12 +540,6 @@ msgstr "Buscar (may/min indistinto)"
 msgid "Search phonebook"
 msgstr "Buscar agenda"
 
-msgid "Searching in LDIF..."
-msgstr "Buscando en LDIF..."
-
-msgid "Searching in Outlook export..."
-msgstr "Buscando en la exportación de Outlook..."
-
 msgid "Setting..."
 msgstr ""
 
@@ -649,6 +644,9 @@ msgid "Unknown"
 msgstr ""
 
 msgid "Update available"
+msgstr ""
+
+msgid "Use HTTPS to communicate with FRITZ!Box"
 msgstr ""
 
 msgid "Use internal PhoneBook"
@@ -848,6 +846,9 @@ msgstr ""
 #~ "\n"
 #~ "%(newname)s?"
 
+#~ msgid "Enter Search Terms"
+#~ msgstr "Introduzca Términos de Búsqueda"
+
 #, fuzzy
 #~ msgid "FRITZ!Box - Could not load phonebook: %s"
 #~ msgstr "No puedo cargar la agenda desde FRITZ!Box - Error: %s"
@@ -894,6 +895,12 @@ msgstr ""
 #~ msgid "No call redirection active"
 #~ msgstr "No cuenta de correo activa"
 
+#~ msgid "No result from LDIF"
+#~ msgstr "No hay resultado desde LDIF"
+
+#~ msgid "No result from Outlook export"
+#~ msgstr "No hay resultado desde la exportación de Outlook"
+
 #, fuzzy
 #~ msgid "One call redirection active"
 #~ msgstr "Una cuenta de correo activa"
@@ -918,6 +925,12 @@ msgstr ""
 
 #~ msgid "Reverse Lookup Caller ID (select country below)"
 #~ msgstr "Búsqueda inversa del ID llamante (seleccionar país abajo)"
+
+#~ msgid "Searching in LDIF..."
+#~ msgstr "Buscando en LDIF..."
+
+#~ msgid "Searching in Outlook export..."
+#~ msgstr "Buscando en la exportación de Outlook..."
 
 #~ msgid "Show Calls for specific MSN"
 #~ msgstr "Mostrar Llamadas para un específico MSN"

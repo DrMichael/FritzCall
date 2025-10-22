@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2  - FRITZ!Box\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-20 10:41+0100\n"
+"POT-Creation-Date: 2025-10-22 10:10+0200\n"
 "PO-Revision-Date: 2015-04-14 23:22+0200\n"
 "Last-Translator: Spaeleus <spaeleus@croci.org>\n"
 "Language-Team: www.linsat.net <spaeleus@croci.org>\n"
@@ -130,6 +130,16 @@ msgstr ""
 msgid "Could not get call list; wrong version?"
 msgstr "Impossibile ottenere elenco chiamate: versione errata?"
 
+msgid "Could not load barring list: "
+msgstr ""
+
+#, python-format
+msgid "Could not load barring list: %s"
+msgstr ""
+
+msgid "Could not load deflections list: "
+msgstr ""
+
 msgid "Could not load phonebook: "
 msgstr ""
 
@@ -207,6 +217,9 @@ msgstr ""
 "\n"
 "%(name)s?"
 
+msgid "Do you really want to reboot your Fritz!Box?"
+msgstr ""
+
 #. TRANSLATORS: keep it short, this is a button
 msgid "Edit"
 msgstr "Mod."
@@ -215,9 +228,6 @@ msgstr "Mod."
 #. TRANSLATORS: this is a window title.
 msgid "Edit selected entry"
 msgstr "Mod. voce selezionata"
-
-msgid "Enter Search Terms"
-msgstr "Inserire criteri di ricerca"
 
 msgid "Entry incomplete."
 msgstr "Voce incompleta."
@@ -406,9 +416,6 @@ msgstr "MSN da mostrare (separare con ,)"
 msgid "Mailbox"
 msgstr "Casella di posta"
 
-msgid "Make it more skin friendly"
-msgstr ""
-
 #. TRANSLATORS: keep it short, this is a button
 msgid "Missed"
 msgstr "Ch. perse"
@@ -446,12 +453,6 @@ msgstr "Nessuna casella di posta attiva"
 
 msgid "No phonebook"
 msgstr "Nessuna rubrica"
-
-msgid "No result from LDIF"
-msgstr "Ricerca in LDIF: nessun risultato!"
-
-msgid "No result from Outlook export"
-msgstr "Ricerca in Outlook  export: nessun risultato!"
 
 msgid "No result from reverse lookup"
 msgstr "Ricerca identificativo chiamante: nessun risultato!"
@@ -564,12 +565,6 @@ msgstr "Ricerca (non distingue Maiusc-minusc)"
 msgid "Search phonebook"
 msgstr "Ricerca su rubrica"
 
-msgid "Searching in LDIF..."
-msgstr "Ricerca in LDIF..."
-
-msgid "Searching in Outlook export..."
-msgstr "Ricerca in Outlook  export..."
-
 msgid "Setting..."
 msgstr "impostazioni..."
 
@@ -674,6 +669,9 @@ msgid "Unknown"
 msgstr ""
 
 msgid "Update available"
+msgstr ""
+
+msgid "Use HTTPS to communicate with FRITZ!Box"
 msgstr ""
 
 msgid "Use internal PhoneBook"
@@ -835,6 +833,9 @@ msgstr "Utente o password errati?"
 #~ msgid "Debug"
 #~ msgstr "Debug"
 
+#~ msgid "Enter Search Terms"
+#~ msgstr "Inserire criteri di ricerca"
+
 #~ msgid "FRITZ!Box - Could not load phonebook: %s"
 #~ msgstr "FRITZ!Box - Impossibile caricare la rubrica: %s"
 
@@ -847,6 +848,12 @@ msgstr "Utente o password errati?"
 #~ msgid "No call redirection active"
 #~ msgstr "Nessuna deviazione chiamate attiva"
 
+#~ msgid "No result from LDIF"
+#~ msgstr "Ricerca in LDIF: nessun risultato!"
+
+#~ msgid "No result from Outlook export"
+#~ msgstr "Ricerca in Outlook  export: nessun risultato!"
+
 #~ msgid "One call redirection active"
 #~ msgstr "Una deviazione chiamate attiva"
 
@@ -855,6 +862,12 @@ msgstr "Utente o password errati?"
 
 #~ msgid "Reverse Lookup Caller ID (select country below)"
 #~ msgstr "Identificativo chiamante (selezionare il Paese!)"
+
+#~ msgid "Searching in LDIF..."
+#~ msgstr "Ricerca in LDIF..."
+
+#~ msgid "Searching in Outlook export..."
+#~ msgstr "Ricerca in Outlook  export..."
 
 #~ msgid "Secure WLAN guest network"
 #~ msgstr "Sicurezza rete WLAN Guest"

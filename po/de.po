@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Enigma2 FritzCall Plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-29 12:34+0200\n"
-"PO-Revision-Date: 2020-03-29 12:35+0200\n"
+"POT-Creation-Date: 2025-10-22 10:10+0200\n"
+"PO-Revision-Date: 2025-10-22 10:38+0200\n"
 "Last-Translator: Michael Schmidt <michael@schmidt-schmitten.com>\n"
 "Language-Team: german <de@li.org>\n"
 "Language: de\n"
@@ -128,6 +128,16 @@ msgstr ""
 msgid "Could not get call list; wrong version?"
 msgstr "Konnte Anrufliste nicht bekommen; falsche Firmware-Version?"
 
+msgid "Could not load barring list: "
+msgstr "Konnte Sperrliste nicht laden: "
+
+#, python-format
+msgid "Could not load barring list: %s"
+msgstr "Konnte Sperrliste nicht laden: %s"
+
+msgid "Could not load deflections list: "
+msgstr "Konnte Liste der Rufumleitungen nicht laden: "
+
 msgid "Could not load phonebook: "
 msgstr "Konnte Telefonbuch nicht laden: "
 
@@ -205,6 +215,9 @@ msgstr ""
 "%(name)s\n"
 "\n"
 "für %(number)s wirklich gelöscht werden?"
+
+msgid "Do you really want to reboot your Fritz!Box?"
+msgstr "Soll die Fritz!Box neu gestartet werden?"
 
 #. TRANSLATORS: keep it short, this is a button
 msgid "Edit"
@@ -404,9 +417,6 @@ msgstr "anzuzeigende MSNs (getrennt durch ,)"
 msgid "Mailbox"
 msgstr "Anrufbeantworter"
 
-msgid "Make it more skin friendly"
-msgstr "Mehr Möglichkeiten für Skins"
-
 #. TRANSLATORS: keep it short, this is a button
 msgid "Missed"
 msgstr "Verpasst"
@@ -444,12 +454,6 @@ msgstr "Kein Anrufbeantworter aktiv"
 
 msgid "No phonebook"
 msgstr "Kein Telefonbuch"
-
-msgid "No result from LDIF"
-msgstr "Kein Ergebnis von LDIF"
-
-msgid "No result from Outlook export"
-msgstr "Kein Ergebnis von Outlook-Export"
 
 msgid "No result from reverse lookup"
 msgstr "Kein Ergebnis von Rückwärtssuche"
@@ -561,12 +565,6 @@ msgstr "Suche Zeichenfolge (groß/klein egal)"
 
 msgid "Search phonebook"
 msgstr "Telefonbuchsuche"
-
-msgid "Searching in LDIF..."
-msgstr "Suche in LDIF..."
-
-msgid "Searching in Outlook export..."
-msgstr "Suche in Outlook-Export..."
 
 msgid "Setting..."
 msgstr "Setze..."
