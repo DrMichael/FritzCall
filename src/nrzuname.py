@@ -202,6 +202,10 @@ class ReverseLookupAndNotifier(object):
 					code = country.getAttribute("code").replace("+", "00")
 					countries[code] = country.getElementsByTagName("website")
 
+		if countrycode not in countries:
+			debug("Country cannot be reverse handled")
+			return
+
 		self.countrycode = countrycode
 
 		if re.match(r'^\+', self.number):
