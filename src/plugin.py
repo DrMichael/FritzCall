@@ -2,9 +2,9 @@
 '''
 Update rev
 $Author: michael $
-$Revision: 1666 $
-$Date: 2025-10-22 10:09:31 +0200 (Mi., 22 Okt. 2025) $
-$Id: plugin.py 1666 2025-10-22 08:09:31Z michael $
+$Revision: 1668 $
+$Date: 2025-11-08 10:49:55 +0100 (Sa., 08 Nov. 2025) $
+$Id: plugin.py 1668 2025-11-08 09:49:55Z michael $
 '''
 
 # missing-docstring / C0111
@@ -391,8 +391,8 @@ class FritzAbout(Screen):
 		self["text"] = Label(
 							"FritzCall Plugin" + "\n\n" +
 							"$Author: michael $"[1:-2] + "\n" +
-							"$Revision: 1666 $"[1:-2] + "\n" +
-							"$Date: 2025-10-22 10:09:31 +0200 (Mi., 22 Okt. 2025) $"[1:23] + "\n"
+							"$Revision: 1668 $"[1:-2] + "\n" +
+							"$Date: 2025-11-08 10:49:55 +0100 (Sa., 08 Nov. 2025) $"[1:23] + "\n"
 							)
 		self["url"] = Label("http://wiki.blue-panel.com/index.php/FritzCall")
 		self.onLayoutFinish.append(self.setWindowTitle)
@@ -1904,7 +1904,7 @@ class FritzCallPhonebook(object):
 						self.skin = """
 						<!-- Fullhd screen -->
 						<screen name="AddScreen" position="center,center" size="1250,210" title="Add entry to phonebook" >
-								<widget name="config" position="10,10" size="1230,120" itemHeight="40" font="Regular;30" enableWrapAround="1" scrollbarMode="showOnDemand"/>
+								<widget name="config" position="10,10" size="1230,120" itemHeight="40" enableWrapAround="1" scrollbarMode="showOnDemand"/>
 								<widget name="key_red" position="10,140" size="300,40" halign="center" font="Regular;30" />
 								<widget name="key_green" position="940,140" size="300,40" halign="center" font="Regular;30" />
 								<eLabel position="10,190" size="300,8" backgroundColor="#9f1313"/>
@@ -2077,7 +2077,7 @@ class FritzCallSetup(Screen, ConfigListScreen, HelpableScreen):
 				<screen name="FritzCallSetup" position="center,center" size="1550,850" title="FritzCall Setup" >
 					<widget name="consideration" position="10,10" halign="center" foregroundColor="#bab329" size="1530,40" font="Regular;30"/>
 					<eLabel position="10,55" size="1530,2" backgroundColor="#aaaaaa" />
-					<widget name="config" position="10,65" size="1530,680" itemHeight="40" font="Regular;30" enableWrapAround="1" scrollbarMode="showOnDemand"/>
+					<widget name="config" position="10,65" size="1530,680" itemHeight="40" enableWrapAround="1" scrollbarMode="showOnDemand"/>
 					<widget name="key_red" position="10,780" size="320,40" halign="center" font="Regular;30" />
 					<widget name="key_green" position="340,780" size="320,40" halign="center" font="Regular;30" />
 					<widget name="key_yellow" position="670,780" size="320,40"  halign="center" font="Regular;30" />
@@ -2177,7 +2177,7 @@ class FritzCallSetup(Screen, ConfigListScreen, HelpableScreen):
 
 	def setWindowTitle(self):
 		# TRANSLATORS: this is a window title.
-		self.setTitle(_("FritzCall Setup") + " (" + "$Revision: 1666 $"[1:-1] + "$Date: 2025-10-22 10:09:31 +0200 (Mi., 22 Okt. 2025) $"[7:23] + ")")
+		self.setTitle(_("FritzCall Setup") + " (" + "$Revision: 1668 $"[1:-1] + "$Date: 2025-11-08 10:49:55 +0100 (Sa., 08 Nov. 2025) $"[7:23] + ")")
 
 	def keyLeft(self):
 		ConfigListScreen.keyLeft(self)
@@ -2751,7 +2751,7 @@ class FritzReverseLookupAndNotifier(object):
 
 class FritzProtocol(LineReceiver):  # pylint: disable=abstract-method
 	def __init__(self):
-		info("[FritzProtocol] %s%s starting", "$Revision: 1666 $"[1:-1], "$Date: 2025-10-22 10:09:31 +0200 (Mi., 22 Okt. 2025) $"[7:23])
+		info("[FritzProtocol] %s%s starting", "$Revision: 1668 $"[1:-1], "$Date: 2025-11-08 10:49:55 +0100 (Sa., 08 Nov. 2025) $"[7:23])
 		global mutedOnConnID
 		mutedOnConnID = None
 		self.number = '0'
